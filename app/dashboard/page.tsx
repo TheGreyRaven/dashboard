@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { PlayerCharts } from "@/components/dashboard/charts/players";
 import { PlayersOnline } from "@/components/dashboard/stats/players-online";
 import {
@@ -44,10 +46,15 @@ const Home = async () => {
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-        <div className="flex items-center justify-between space-y-2">
-          <h2 className="text-3xl font-bold tracking-tight">
-            Welcome back! 👋
-          </h2>
+        <div className="flex items-baseline">
+          <h2 className="text-3xl font-bold tracking-tight">Welcome back!</h2>
+          <Image
+            src="/emoji/Waving-Hand.png"
+            alt="Waving Hand"
+            width="32"
+            height="32"
+            className="ml-2"
+          />
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
@@ -58,8 +65,8 @@ const Home = async () => {
               <IconUsers className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{players.length}/64</div>
-              <p className="text-xs text-muted-foreground">Max today: 64</p>
+              <div className="text-2xl font-bold">{players.length}/90</div>
+              <p className="text-xs text-muted-foreground">Max today: 90</p>
             </CardContent>
           </Card>
           <Card>
@@ -133,7 +140,7 @@ const Home = async () => {
           <Card className="col-span-4 md:col-span-3">
             <CardHeader>
               <CardTitle>Online Players</CardTitle>
-              <CardDescription>Currently: {players.length}/64</CardDescription>
+              <CardDescription>Currently: {players.length}/90</CardDescription>
             </CardHeader>
             <CardContent>
               <PlayersOnline players={players} />
