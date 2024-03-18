@@ -26,7 +26,7 @@ export const {
       if (profile) {
         try {
           const exists = await fetch(
-            `http://localhost:3000/api/proxy?id=${profile.id}`
+            `${process.env.LOCAL_URL}/api/proxy?id=${profile.id}`
           );
           const { success } = await exists.json();
 
@@ -53,7 +53,9 @@ export const {
       if (jwt.profile) {
         const id = jwt.profile.id;
 
-        const exists = await fetch(`http://localhost:3000/api/proxy?id=${id}`);
+        const exists = await fetch(
+          `${process.env.LOCAL_URL}/api/proxy?id=${id}`
+        );
         const { permission_level } = await exists.json();
         session.user = {
           id: jwt.profile.id,
