@@ -3,9 +3,9 @@ import { authConfig } from "./auth.config";
 
 const { auth } = NextAuth(authConfig);
 
-const ROOT = "/signin";
-const PUBLIC_ROUTES = ["/signin"];
-const DEFAULT_REDIRECT = "/";
+const ROOT = "/";
+const PUBLIC_ROUTES = ["/"];
+const DEFAULT_REDIRECT = "/dashboard";
 
 export default auth((req) => {
   const { nextUrl } = req;

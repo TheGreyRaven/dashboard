@@ -1,18 +1,11 @@
-import { auth, signOut } from "./api/auth/[...nextauth]/auth";
+import { AuthSignIn } from "@/components/auth";
 
-const Home = async () => {
-  const session = await auth();
-
+const SignIn = async () => {
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signOut();
-      }}
-    >
-      <button>Sign out</button>
-    </form>
+    <div className="h-screen flex items-center justify-center">
+      <AuthSignIn />
+    </div>
   );
 };
 
-export default Home;
+export default SignIn;

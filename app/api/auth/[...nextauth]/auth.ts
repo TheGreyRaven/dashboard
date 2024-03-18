@@ -17,7 +17,7 @@ export const {
     async jwt({ token, profile }) {
       return { token, profile };
     },
-    async session({ session, token: jwt }: { session: any; token: any }) {
+    async session({ session, token: jwt }: any) {
       session.user = {
         id: jwt.token.profile.id,
         name: jwt.token.profile.username,
@@ -29,6 +29,6 @@ export const {
     },
   },
   pages: {
-    signIn: "/signin",
+    signIn: "/",
   },
 });
