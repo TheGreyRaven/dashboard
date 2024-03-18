@@ -39,9 +39,9 @@ const POST = async (req: NextRequest, res: NextResponse) => {
   try {
     const members = await fetchMembers();
 
-    await prisma.brp_web_stats_players_online.create({
+    await prisma.brp_web_stats_discord_members.create({
       data: {
-        players_online: members,
+        members: members,
       },
     });
 
