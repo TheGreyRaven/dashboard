@@ -1,5 +1,11 @@
-import { NavItem, SidebarNavItem } from "@/types";
-import { IconDatabase, IconHome, IconTools, IconUser, IconUsers } from "@tabler/icons-react";
+import { NavItem } from "@/types";
+import {
+  IconDatabase,
+  IconHome,
+  IconTools,
+  IconUser,
+  IconUsers,
+} from "@tabler/icons-react";
 
 export const navItems: NavItem[] = [
   {
@@ -13,6 +19,7 @@ export const navItems: NavItem[] = [
     href: "/dashboard/admins",
     icon: <IconUser className="mr-2 h-4 w-4" />,
     label: "admins",
+    accessRole: "ADMIN",
   },
   {
     title: "Players",
@@ -25,11 +32,13 @@ export const navItems: NavItem[] = [
     href: "/dashboard/settings",
     icon: <IconTools className="mr-2 h-4 w-4" />,
     label: "settings",
+    accessRole: "ROOT",
   },
   {
     title: "Logs",
     href: "/dashboard/logs",
     icon: <IconDatabase className="mr-2 h-4 w-4" />,
     label: "logs",
+    accessRole: "ADMIN",
   },
 ];

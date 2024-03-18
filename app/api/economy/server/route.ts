@@ -7,7 +7,7 @@ const parseJson = (json: any) => {
     const data = JSON.parse(json);
     return data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
   return {
     bank: 0,
@@ -15,6 +15,8 @@ const parseJson = (json: any) => {
 };
 
 const GET = async (req: NextRequest, res: NextResponse) => {
+  let serverEconomy = 0;
+
   try {
     const data = await prisma.players.findMany({
       select: {
@@ -22,8 +24,6 @@ const GET = async (req: NextRequest, res: NextResponse) => {
         inventory: true,
       },
     });
-
-    let serverEconomy = 0;
 
     for (const index in data) {
       try {
@@ -45,14 +45,20 @@ const GET = async (req: NextRequest, res: NextResponse) => {
 
         serverEconomy += Math.floor(bank + cash);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
 
     return Response.json(serverEconomy);
-  } catch (err) {}
-
-  return Response.json("ok");
+  } catch (err: any) {
+    return Response.json({
+      success: false,
+      error: err.message,
+      economy: 0,
+    });
+  } finally {
+    prisma.$disconnect();
+  }
 };
 
 export { GET };
