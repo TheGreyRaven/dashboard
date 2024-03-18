@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model brp_web_admins {
+  id               Int                             @id @default(autoincrement())
+  permission_level brp_web_admins_permission_level @default(MOD)
+  discord_name     String                          @db.VarChar(255)
+  discord_email    String                          @db.VarChar(255)
+  discord_id       String                          @unique(map: "discord_id") @db.VarChar(255)
+  added_by_name    String?                         @db.VarChar(255)
+  added_by_id      String?                         @db.VarChar(255)
+  added_timestamp  DateTime                        @default(now()) @db.Timestamp(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model brp_web_logs {
+  id Int @default(autoincrement())
+
+  @@index([id], map: "id")
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model brp_web_stats_server_money {
+  id            Int       @default(autoincrement())
+  total_economy BigInt?
+  timestamp     DateTime? @default(now()) @db.DateTime(0)
+
+  @@index([id], map: "id")
+  @@ignore
+}
+
+model players {
+  id              Int      @default(autoincrement())
+  citizenid       String   @id @db.VarChar(50)
+  steamid         String?  @db.VarChar(55)
+  cid             Int?
+  license         String   @db.VarChar(255)
+  name            String   @db.VarChar(255)
+  money           String   @db.Text
+  charinfo        String?  @db.Text
+  job             String   @db.Text
+  gang            String?  @db.Text
+  position        String   @db.Text
+  metadata        String   @db.Text
+  inventory       String?  @db.LongText
+  last_updated    DateTime @default(now()) @db.Timestamp(0)
+  phone_number    String?  @db.VarChar(20)
+  iban            String?  @db.VarChar(255)
+  pincode         Int?
+  crafting_level  Int      @default(0)
+  credits         Int      @default(0)
+  tasks           String   @default("") @db.VarChar(255)
+  tasks_completed String   @default("") @db.VarChar(255)
+  winnings        String   @default("") @db.VarChar(255)
+  wheel           String?  @default("0") @db.VarChar(1)
+  inside          String?  @db.VarChar(100)
+  shell_garage    String?  @default("") @db.Text
+  ownedskills     String   @default("{}") @db.LongText
+  skillsinfo      String   @default("{\"skillpoints\":0, \"skillxp\":0, \"nextlevel\":100, \"currentlevel\":0}") @db.LongText
+
+  @@index([id], map: "id")
+  @@index([last_updated], map: "last_updated")
+  @@index([license], map: "license")
+}
+
+enum brp_web_admins_permission_level {
+  ROOT
+  ADMIN
+  MOD
+}

@@ -1,4 +1,4 @@
-import { signOut } from "@/app/api/auth/[...nextauth]/auth";
+import { auth, signOut } from "@/app/api/auth/[...nextauth]/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,23 +7,29 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const UserNav = async () => {
+  const session = await auth();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={""} alt={""} />
-            <AvatarFallback>thegreyraven</AvatarFallback>
+            <AvatarImage
+              src={
+                //@ts-expect-error
+                `https://cdn.discordapp.com/avatars/${session?.user?.id}/${session?.user?.avatar}?size=1024` ??
+                ""
+              }
+              alt={session?.user?.name ?? "N/A"}
+            />
+            <AvatarFallback>{session?.user?.name ?? "N/A"}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
+        {/* <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">thegreyraven</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              oscar.braberg@gmail.com
-            </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -33,7 +39,7 @@ const UserNav = async () => {
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>New Team</DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator /> */}
         <form
           action={async () => {
             "use server";
@@ -41,7 +47,7 @@ const UserNav = async () => {
           }}
         >
           <DropdownMenuItem>
-            <button>Log out</button>
+            <button className="w-full text-start">Log out</button>
           </DropdownMenuItem>
         </form>
       </DropdownMenuContent>

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: "Bygden - Welcome",
 };
 
-const RootLayout = ({
+const Layout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -41,4 +41,4 @@ const RootLayout = ({
   );
 };
 
-export default RootLayout;
+export default Layout;
