@@ -1,10 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { IconCircleFilled } from "@tabler/icons-react";
 
 const PingThreshold = ({ ping }: { ping: number }) => {
-  if (ping > 0 && ping < 40) {
+  if (ping >= 0 && ping <= 60) {
     return (
       <div className="ml-auto flex items-center">
         <p className="font-medium">{ping}ms</p>{" "}
@@ -13,7 +12,7 @@ const PingThreshold = ({ ping }: { ping: number }) => {
     );
   }
 
-  if (ping > 40 && ping < 80) {
+  if (ping >= 60 && ping <= 80) {
     return (
       <div className="ml-auto flex items-center">
         <p className="font-medium">{ping}ms</p>{" "}

@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { PlayerCharts } from "@/components/dashboard/charts/players";
 import { PlayersOnline } from "@/components/dashboard/stats/players-online";
+import { ServerEconomy } from "@/components/dashboard/stats/server-economy";
 import {
   Card,
   CardContent,
@@ -77,21 +78,7 @@ const Home = async () => {
               <IconCash className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <TooltipTrigger>
-                <div className="text-2xl font-bold">
-                  {new Intl.NumberFormat("sv-SE", {
-                    style: "currency",
-                    currency: "SEK",
-                    notation: "compact",
-                  }).format(money)}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                {new Intl.NumberFormat("sv-SE", {
-                  style: "currency",
-                  currency: "SEK",
-                }).format(money)}
-              </TooltipContent>
+              <ServerEconomy economy={money} />
               <p className="text-xs text-muted-foreground">
                 12% from yesterday
               </p>
