@@ -1,8 +1,10 @@
+import Link from "next/link";
+
 import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
+
 import { MobileSidebar } from "./mobile-sidebar";
 import { UserNav } from "./user-nav";
-import Link from "next/link";
 
 export default function Header() {
   return (

@@ -1,5 +1,6 @@
 import { navItems } from "@/constants/menu";
 import { cn } from "@/lib/utils";
+
 import { DashboardNav } from "../dashboard-nav";
 
 export default function Sidebar() {

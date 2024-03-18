@@ -1,8 +1,9 @@
 import { signIn } from "@/app/api/auth/[...nextauth]/auth";
+import { IconAlertTriangle, IconBrandDiscord } from "@tabler/icons-react";
+
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { IconAlertTriangle, IconBrandDiscord } from "@tabler/icons-react";
 
 const AuthSignIn = async ({
   provider = "discord",

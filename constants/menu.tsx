@@ -1,11 +1,5 @@
 import { NavItem, SidebarNavItem } from "@/types";
-import {
-  IconDatabase,
-  IconHome,
-  IconTools,
-  IconUser,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconDatabase, IconHome, IconTools, IconUser, IconUsers } from "@tabler/icons-react";
 
 export const navItems: NavItem[] = [
   {
