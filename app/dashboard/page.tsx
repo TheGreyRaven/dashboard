@@ -1,17 +1,34 @@
 import { PlayerCharts } from "@/components/dashboard/charts/players";
 import { PlayersOnline } from "@/components/dashboard/stats/players-online";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { IconBrandDiscord, IconCash, IconCircleFilled, IconUsers } from "@tabler/icons-react";
+import {
+  IconBrandDiscord,
+  IconCash,
+  IconCircleFilled,
+  IconUsers,
+} from "@tabler/icons-react";
 
 const getPlayers = async () => {
   const [players, money, members] = await Promise.all([
-    fetch("http://194.164.200.162:30120/players.json"),
-    fetch("http://localhost:3000/api/economy/server"),
-    fetch(
-      `https://discord.com/api/v9/invites/Xpzj8Eyzhr?with_counts=true&with_expiration=true`
-    ),
+    fetch(`${process.env.FIVEM_SERVER_URL}/players.json`, {
+      cache: "no-cache",
+    }),
+    fetch(`${process.env.LOCAL_URL}/api/economy/server`, {
+      cache: "no-cache",
+    }),
+    fetch(`${process.env.LOCAL_URL}/api/discord/members`, {
+      next: {
+        revalidate: 0,
+      },
+    }),
   ]);
 
   return {
@@ -69,7 +86,7 @@ const Home = async () => {
                 }).format(money)}
               </TooltipContent>
               <p className="text-xs text-muted-foreground">
-                +180.1% from yesterday
+                12% from yesterday
               </p>
             </CardContent>
           </Card>
@@ -82,10 +99,10 @@ const Home = async () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {members.approximate_member_count}
+                {members?.data?.today?.members ?? 0}
               </div>
               <p className="text-xs text-muted-foreground">
-                +12 from yesterday
+                {members.data.difference} from yesterday
               </p>
             </CardContent>
           </Card>

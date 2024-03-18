@@ -71,6 +71,18 @@ model players {
   @@index([license], map: "license")
 }
 
+model brp_web_stats_players_online {
+  id             Int      @id @default(autoincrement())
+  players_online Int
+  timestamp      DateTime @default(now()) @db.Timestamp(0)
+}
+
+model brp_web_stats_discord_members {
+  id        Int      @id @default(autoincrement())
+  members   Int
+  timestamp DateTime @default(now()) @db.Timestamp(0)
+}
+
 enum brp_web_admins_permission_level {
   ROOT
   ADMIN
