@@ -48,7 +48,7 @@ const GET = async (req: NextRequest, res: NextResponse) => {
         console.error(err);
       }
     }
-
+    await prisma.$disconnect();
     return Response.json(serverEconomy);
   } catch (err: any) {
     return Response.json({

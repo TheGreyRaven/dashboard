@@ -1,7 +1,9 @@
 import "./globals.css";
 
+import { SessionProvider } from "next-auth/react";
 import { Inter as FontSans } from "next/font/google";
 
+import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 
@@ -15,11 +17,12 @@ export const metadata: Metadata = {
   title: "Bygden - Welcome",
 };
 
-const Layout = ({
+const Layout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const session = await auth();
   return (
     <html lang="en">
       <body
@@ -34,7 +37,7 @@ const Layout = ({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SessionProvider session={session}>{children}</SessionProvider>
         </ThemeProvider>
       </body>
     </html>

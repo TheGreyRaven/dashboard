@@ -22,7 +22,7 @@ const AuthSignIn = async ({
           <form
             action={async () => {
               "use server";
-              await signIn(provider, { callbackUrl: callbackUrl });
+              await signIn(provider, { redirectTo: callbackUrl });
             }}
           >
             <Button variant="outline" className="w-full">

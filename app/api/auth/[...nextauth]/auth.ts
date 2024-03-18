@@ -1,14 +1,15 @@
 import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 
-import { prisma } from "@/lib/prisma";
-
 export const {
   handlers: { GET, POST },
   auth,
   signIn,
   signOut,
 } = NextAuth({
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     Discord({
       clientId: process.env.AUTH_DISCORD_ID ?? "",
@@ -16,58 +17,54 @@ export const {
     }),
   ],
   callbacks: {
-    async signIn(data: any) {
-      try {
-        const adminUser = await prisma.brp_web_admins.findFirst({
-          where: {
-            discord_id: data.profile.id,
-          },
-          select: {
-            permission_level: true,
-          },
-        });
+    async authorized({ auth }) {
+      const isAuthenticated = !!auth?.user;
 
-        if (adminUser) {
-          return true;
-        }
-
-        return false;
-      } catch (err) {
-        console.error(err);
-        return false;
-      } finally {
-        await prisma.$disconnect();
-      }
+      return isAuthenticated;
     },
-    async jwt({ token, profile }) {
-      return { token, profile };
+    async signIn({ profile }) {
+      if (profile) {
+        try {
+          const exists = await fetch(
+            `http://localhost:3000/api/proxy?id=${profile.id}`
+          );
+          const { success } = await exists.json();
+
+          return success ? success : "/?error=not-admin";
+        } catch (err) {
+          console.error(err);
+          return "/?error=failed";
+        }
+      }
+
+      return "/?error=unknown";
+    },
+    async jwt({ token, user, profile }) {
+      if (user) {
+        return {
+          token,
+          profile,
+        };
+      }
+
+      return token;
     },
     async session({ session, token: jwt }: any) {
-      try {
-        const adminUser = await prisma.brp_web_admins.findFirst({
-          where: {
-            discord_id: jwt.token.profile.id,
-          },
-          select: {
-            permission_level: true,
-          },
-        });
+      if (jwt.profile) {
+        const id = jwt.profile.id;
 
+        const exists = await fetch(`http://localhost:3000/api/proxy?id=${id}`);
+        const { permission_level } = await exists.json();
         session.user = {
-          id: jwt.token.profile.id,
-          name: jwt.token.profile.username,
-          avatar: jwt.token.profile.avatar,
-          email: jwt.token.profile.email,
-          permission_level: adminUser?.permission_level,
+          id: jwt.profile.id,
+          name: jwt.profile.username,
+          avatar: jwt.profile.avatar,
+          email: jwt.profile.email,
+          permission_level: permission_level,
         };
-
-        return session;
-      } catch (err) {
-        console.error(err);
-        return null;
-      } finally {
-        await prisma.$disconnect();
       }
+
+      return session;
     },
   },
   pages: {

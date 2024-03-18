@@ -6,7 +6,7 @@ export interface NavItem {
   icon?: any;
   label?: string;
   description?: string;
-  accessRole?: "ROOT" | "ADMIN" | "MOD";
+  accessRole: Array<"ROOT" | "ADMIN" | "MOD">;
 }
 
 export interface NavItemWithChildren extends NavItem {

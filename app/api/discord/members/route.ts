@@ -44,7 +44,7 @@ const POST = async (req: NextRequest, res: NextResponse) => {
         members: members,
       },
     });
-
+    await prisma.$disconnect();
     return Response.json({
       members: members,
       success: true,
@@ -92,7 +92,7 @@ const GET = async (req: NextRequest, res: NextResponse) => {
       latestYesterday?.members ?? 0,
       latestToday?.members ?? 0
     );
-
+    await prisma.$disconnect();
     return Response.json({
       success: true,
       error: null,

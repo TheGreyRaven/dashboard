@@ -1,7 +1,4 @@
-import NextAuth from "next-auth";
-import { authConfig } from "./auth.config";
-
-const { auth } = NextAuth(authConfig);
+import { auth } from "./app/api/auth/[...nextauth]/auth";
 
 const ROOT = "/";
 const PUBLIC_ROUTES = ["/"];

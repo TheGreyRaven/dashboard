@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
@@ -14,6 +15,7 @@ interface DashboardNavProps {
 
 export function DashboardNav({ items, setOpen }: DashboardNavProps) {
   const path = usePathname();
+  const { data: session } = useSession();
 
   if (!items?.length) {
     return null;
@@ -23,8 +25,14 @@ export function DashboardNav({ items, setOpen }: DashboardNavProps) {
     <nav className="grid items-start gap-2">
       {items.map((item, index) => {
         const Icon = item.icon as React.ReactNode;
+        const hasAccess = item.accessRole?.includes(
+          //@ts-expect-error
+          session?.user.permission_level
+        );
+
         return (
-          item.href && (
+          item.href &&
+          hasAccess && (
             <Link
               key={index}
               href={item.disabled ? "/" : item.href}
