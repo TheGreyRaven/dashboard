@@ -76,7 +76,7 @@ const GET = async (req: NextRequest, res: NextResponse) => {
 
     const percentage = percentageChange(
       // @ts-expect-error
-      latestYesterday?.members ?? 0,
+      latestYesterday[0]?.members ?? 0,
       latestToday?.members ?? 0
     );
 
