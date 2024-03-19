@@ -61,8 +61,6 @@ const POST = async (req: NextRequest, res: NextResponse) => {
 };
 
 const GET = async (req: NextRequest, res: NextResponse) => {
-  const yesterDay = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-
   try {
     const latestToday = await prisma.brp_web_stats_discord_members.findFirst({
       orderBy: {
@@ -74,24 +72,14 @@ const GET = async (req: NextRequest, res: NextResponse) => {
     });
 
     const latestYesterday =
-      await prisma.brp_web_stats_discord_members.findFirst({
-        orderBy: {
-          timestamp: "asc",
-        },
-        select: {
-          members: true,
-        },
-        where: {
-          timestamp: {
-            lte: yesterDay,
-          },
-        },
-      });
+      await prisma.$queryRaw`SELECT \`members\` FROM \`brp_web_stats_discord_members\` WHERE DATE(timestamp) = DATE(NOW() - INTERVAL 1 DAY) ORDER BY \`timestamp\` DESC LIMIT 1;`;
 
     const percentage = percentageChange(
+      // @ts-expect-error
       latestYesterday?.members ?? 0,
       latestToday?.members ?? 0
     );
+
     await prisma.$disconnect();
     return Response.json({
       success: true,
