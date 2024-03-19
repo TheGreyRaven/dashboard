@@ -22,14 +22,18 @@ import {
 const getPlayers = async () => {
   const [players, money, members] = await Promise.all([
     fetch(`${process.env.FIVEM_SERVER_URL}/players.json`, {
-      cache: "no-cache",
+      next: {
+        revalidate: 60,
+      },
     }),
-    fetch(`${process.env.LOCAL_URL}/api/economy/server`, {
-      cache: "no-cache",
+    fetch(`${process.env.LOCAL_URL}/api/fivem/server-economy`, {
+      next: {
+        revalidate: 60,
+      },
     }),
     fetch(`${process.env.LOCAL_URL}/api/discord/members`, {
       next: {
-        revalidate: 0,
+        revalidate: 60,
       },
     }),
   ]);
