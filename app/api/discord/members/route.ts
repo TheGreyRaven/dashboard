@@ -35,7 +35,7 @@ const percentageChange = (yesterday = 0, today = 0) => {
   ).concat("%");
 };
 
-const POST = async (req: NextRequest, res: NextResponse) => {
+const POST = async (_req: NextRequest, _res: NextResponse) => {
   try {
     const members = await fetchMembers();
 
@@ -60,7 +60,7 @@ const POST = async (req: NextRequest, res: NextResponse) => {
   }
 };
 
-const GET = async (req: NextRequest, res: NextResponse) => {
+const GET = async (_req: NextRequest, _res: NextResponse) => {
   try {
     const latestToday = await prisma.brp_web_stats_discord_members.findFirst({
       orderBy: {

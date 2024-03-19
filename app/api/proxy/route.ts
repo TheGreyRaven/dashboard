@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 
-const GET = async (req: NextRequest, res: NextResponse) => {
-  const url = new URL(req.url);
+const GET = async (_req: NextRequest, _res: NextResponse) => {
+  const url = new URL(_req.url);
   const id = url.searchParams.get("id") ?? "";
 
   try {

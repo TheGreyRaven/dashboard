@@ -14,7 +14,7 @@ const parseJson = (json: any) => {
   };
 };
 
-const GET = async (req: NextRequest, res: NextResponse) => {
+const GET = async (_req: NextRequest, _res: NextResponse) => {
   let serverEconomy = 0;
 
   try {
