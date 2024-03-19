@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 
+const REVALIDATE_TIME = process.env.NODE_ENV === "production" ? 60 : 0;
+
 const fetchMembers = async () => {
   try {
     const raw = await fetch(
       `https://discord.com/api/v9/invites/Xpzj8Eyzhr?with_counts=true&with_expiration=true`,
       {
         next: {
-          revalidate: 60,
+          revalidate: REVALIDATE_TIME,
         },
       }
     );

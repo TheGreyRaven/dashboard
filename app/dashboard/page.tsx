@@ -18,30 +18,42 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
-const getPlayers = async () => {
-  const [players, money, members] = await Promise.all([
-    fetch(`${process.env.FIVEM_SERVER_URL}/players.json`, {
-      next: {
-        revalidate: 60,
-      },
-    }),
-    fetch(`${process.env.LOCAL_URL}/api/fivem/server-economy`, {
-      next: {
-        revalidate: 60,
-      },
-    }),
-    fetch(`${process.env.LOCAL_URL}/api/discord/members`, {
-      next: {
-        revalidate: 60,
-      },
-    }),
-  ]);
+const REVALIDATE_TIME = process.env.NODE_ENV === "production" ? 60 : 0;
 
-  return {
-    players: await players.json(),
-    money: await money.json(),
-    members: await members.json(),
-  };
+const getPlayers = async () => {
+  try {
+    const [players, money, members] = await Promise.all([
+      fetch(`${process.env.FIVEM_SERVER_URL}/players.json`, {
+        next: {
+          revalidate: REVALIDATE_TIME,
+        },
+      }),
+      fetch(`${process.env.LOCAL_URL}/api/fivem/server-economy`, {
+        next: {
+          revalidate: REVALIDATE_TIME,
+        },
+      }),
+      fetch(`${process.env.LOCAL_URL}/api/discord/members`, {
+        next: {
+          revalidate: REVALIDATE_TIME,
+        },
+      }),
+    ]);
+
+    return {
+      players: await players.json(),
+      money: await money.json(),
+      members: await members.json(),
+    };
+  } catch (err) {
+    console.error(err);
+
+    return {
+      players: 0,
+      money: 0,
+      members: 0,
+    };
+  }
 };
 
 const Home = async () => {
