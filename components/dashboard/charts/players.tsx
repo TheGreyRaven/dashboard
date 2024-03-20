@@ -15,11 +15,7 @@ interface PlayerData {
 
 const PlayerCharts = () => {
   const [playerArray, setPlayerArray] = useState<PlayerData[]>([]);
-  const {
-    data: players,
-    error,
-    isLoading,
-  }: { data: PlayerData[]; error: any; isLoading: boolean } = useSWR(
+  const { data: players }: { data: PlayerData[] } = useSWR(
     "/api/fivem/players-online",
     fetcher,
     { refreshInterval: 1000 }
@@ -45,11 +41,6 @@ const PlayerCharts = () => {
 
     setPlayerArray(playerArray);
   }, [players]);
-
-  if (isLoading) {
-    return <Skeleton className="w-[100%] h-[350px]" />;
-  }
-
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={playerArray}>
