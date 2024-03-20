@@ -10,6 +10,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -43,7 +44,7 @@ const formSchema = z.object({
     message: "Discord IDs are minumum 17 numbers long",
   }),
   permission_level: z.enum(["ROOT", "ADMIN", "MOD"], {
-    errorMap: (issue, ctx) => ({
+    errorMap: () => ({
       message: "You must select a permission level",
     }),
   }),
@@ -51,7 +52,7 @@ const formSchema = z.object({
 
 const AddAdmin = () => {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [_isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const { data } = useSession();
@@ -189,6 +190,9 @@ const AddAdmin = () => {
                 )}
               />
               <DialogFooter className="mt-4">
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
                 <Button type="submit" disabled={loading}>
                   {loading ? (
                     <>

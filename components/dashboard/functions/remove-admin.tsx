@@ -3,7 +3,7 @@
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -31,10 +31,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { IconX } from "@tabler/icons-react";
 
 const RemoveAdmin = ({ admin }: { admin: any }) => {
-  const dialogRef = useRef(null);
-  const [open, setOpen] = useState(false);
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [_isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const { data } = useSession();
@@ -99,7 +97,6 @@ const RemoveAdmin = ({ admin }: { admin: any }) => {
             variant="outline"
             size="icon"
             disabled={!hasPermission || admin.discord_id === data?.user?.id}
-            onClick={() => setOpen(true)}
           >
             <IconX className="h-4 w-4" />
           </Button>
@@ -165,7 +162,7 @@ const RemoveAdmin = ({ admin }: { admin: any }) => {
               </div>
               <DialogFooter className="mt-4">
                 <DialogClose asChild>
-                  <Button onClick={() => setOpen(false)}>Cancel</Button>
+                  <Button variant="outline">Cancel</Button>
                 </DialogClose>
                 <Button
                   type="submit"
@@ -187,56 +184,6 @@ const RemoveAdmin = ({ admin }: { admin: any }) => {
         </DialogContent>
       </Dialog>
     </div>
-
-    // <AlertDialog>
-    //   <AlertDialogTrigger asChild>
-    //     <Button
-    //       variant="outline"
-    //       size="icon"
-    //       disabled={!hasPermission}
-    //       onClick={() => console.log(admin)}
-    //     >
-    //       <IconX className="h-4 w-4" />
-    //     </Button>
-    //   </AlertDialogTrigger>
-    //   <AlertDialogContent className="sm:max-w-[425px]">
-    //     <AlertDialogHeader>
-    //       <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-    //       <AlertDialogDescription>
-    //         This action can not be undone and will delete the following admin
-    //         permanently:
-    //         <div className="grid gap-4 py-4">
-    //           <div className="grid grid-cols-1 items-center gap-4">
-    //             <Label htmlFor="name">Discord name</Label>
-    //             <Input
-    //               disabled
-    //               id="name"
-    //               value={admin.discord_name}
-    //               className="disabled:opacity-100"
-    //             />
-    //           </div>
-    //           <div className="grid grid-cols-1 items-center gap-4">
-    //             <Label htmlFor="username">Discord ID</Label>
-    //             <Input
-    //               disabled
-    //               value={admin.discord_id}
-    //               className="disabled:opacity-100"
-    //             />
-    //           </div>
-    //         </div>
-    //       </AlertDialogDescription>
-    //     </AlertDialogHeader>
-    //     <AlertDialogFooter>
-    //       <AlertDialogCancel>Cancel</AlertDialogCancel>
-    //       <AlertDialogAction
-    //         type="submit"
-    //         className="hover:bg-red-900 bg-red-700 text-white"
-    //       >
-    //         Delete
-    //       </AlertDialogAction>
-    //     </AlertDialogFooter>
-    //   </AlertDialogContent>
-    // </AlertDialog>
   );
 };
 
