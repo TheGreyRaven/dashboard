@@ -6,5 +6,6 @@
     "next-env.d.ts": true,
     "yarn.lock": true,
     "package.json": true,
-  }
+  },
+  "censitive.enable": true
 }
