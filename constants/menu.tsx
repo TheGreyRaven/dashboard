@@ -1,11 +1,6 @@
 import { NavItem } from "@/types";
 import {
-  IconDatabase,
-  IconDiamond,
-  IconHome,
-  IconTools,
-  IconUser,
-  IconUsers,
+    IconDatabase, IconDiamond, IconGraph, IconHome, IconTools, IconUser, IconUsers
 } from "@tabler/icons-react";
 
 export const navItems: NavItem[] = [
@@ -22,6 +17,13 @@ export const navItems: NavItem[] = [
     icon: <IconUser className="mr-2 h-4 w-4" />,
     label: "admins",
     accessRole: ["ROOT", "ADMIN", "MOD"],
+  },
+  {
+    title: "Graphs",
+    href: "/dashboard/graphs",
+    icon: <IconGraph className="mr-2 h-4 w-4" />,
+    label: "graphs",
+    accessRole: ["ROOT", "ADMIN", "MOD"]
   },
   {
     title: "Players",
