@@ -6,7 +6,7 @@ import { checkSecret } from "./utils";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
   //@ts-expect-error
-  const postData = (await buffer(_req)) as any;
+  const postData = (await buffer(_req.body)) as any;
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
 
