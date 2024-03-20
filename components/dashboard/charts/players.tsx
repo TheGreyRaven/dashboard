@@ -29,9 +29,7 @@ const PlayerCharts = () => {
     });
 
     sorted?.map((player: PlayerData) => {
-      const date = (
-        "0" + (new Date(player.timestamp).getHours() % 12 || 12)
-      ).slice(-2);
+      const date = new Date(player.timestamp).getHours().toLocaleString();
 
       playerArray.push({
         players_online: player.players_online,

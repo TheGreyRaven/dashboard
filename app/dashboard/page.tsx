@@ -25,6 +25,9 @@ const getData = async () => {
   return dashboardData;
 };
 
+/**
+ * TODO: Move this to client component so we can use SWR to fetch data at regular interval.
+ */
 const setHealth = (_system: any) => {
   if (!_system) {
     return {
