@@ -20,7 +20,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -38,6 +37,7 @@ import { IconAlertTriangle, IconX } from "@tabler/icons-react";
 
 /**
  * TODO: Move the addAdmin function to API endpoint and change the add admin component to client so we can disable the button and provide feedback to the user depending on result.
+ * Maybe we can revalidate the path from the server action on success somehow.
  */
 
 const addAdmin = async (formData: FormData) => {
