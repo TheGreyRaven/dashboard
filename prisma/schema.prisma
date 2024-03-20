@@ -11,8 +11,8 @@ datasource db {
 model brp_web_admins {
   id               Int                             @id @default(autoincrement())
   permission_level brp_web_admins_permission_level @default(MOD)
-  discord_name     String                          @db.VarChar(255)
-  discord_email    String                          @db.VarChar(255)
+  discord_name     String?                         @db.VarChar(255)
+  discord_email    String?                         @db.VarChar(255)
   discord_id       String                          @unique(map: "discord_id") @db.VarChar(255)
   added_by_name    String?                         @db.VarChar(255)
   added_by_id      String?                         @db.VarChar(255)
@@ -25,6 +25,18 @@ model brp_web_logs {
 
   @@index([id], map: "id")
   @@ignore
+}
+
+model brp_web_stats_discord_members {
+  id        Int      @id @default(autoincrement())
+  members   Int
+  timestamp DateTime @default(now()) @db.Timestamp(0)
+}
+
+model brp_web_stats_players_online {
+  id             Int      @id @default(autoincrement())
+  players_online Int
+  timestamp      DateTime @default(now()) @db.Timestamp(0)
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -69,18 +81,6 @@ model players {
   @@index([id], map: "id")
   @@index([last_updated], map: "last_updated")
   @@index([license], map: "license")
-}
-
-model brp_web_stats_players_online {
-  id             Int      @id @default(autoincrement())
-  players_online Int
-  timestamp      DateTime @default(now()) @db.Timestamp(0)
-}
-
-model brp_web_stats_discord_members {
-  id        Int      @id @default(autoincrement())
-  members   Int
-  timestamp DateTime @default(now()) @db.Timestamp(0)
 }
 
 enum brp_web_admins_permission_level {

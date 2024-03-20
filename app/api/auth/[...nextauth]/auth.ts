@@ -26,7 +26,18 @@ export const {
       if (profile) {
         try {
           const exists = await fetch(
-            `${process.env.LOCAL_URL}/api/proxy?id=${profile.id}`
+            `${process.env.LOCAL_URL}/api/proxy?id=${profile.id}`,
+            {
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              method: "POST",
+              body: JSON.stringify({
+                discord_email: profile.email,
+                discord_name: profile.username,
+              }),
+            }
           );
           const { success } = await exists.json();
 
@@ -54,7 +65,18 @@ export const {
         const id = jwt.profile.id;
 
         const exists = await fetch(
-          `${process.env.LOCAL_URL}/api/proxy?id=${id}`
+          `${process.env.LOCAL_URL}/api/proxy?id=${id}`,
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+              discord_email: jwt.profile.email,
+              discord_name: jwt.profile.username,
+            }),
+          }
         );
         const { permission_level } = await exists.json();
         session.user = {

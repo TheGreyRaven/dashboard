@@ -70,6 +70,7 @@ const Home = async () => {
             width="32"
             height="32"
             className="ml-2"
+            unoptimized
           />
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
