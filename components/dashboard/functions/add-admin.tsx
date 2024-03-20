@@ -55,6 +55,7 @@ const AddAdmin = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const { data } = useSession();
+  console.log(data);
   //@ts-expect-error
   const hasPermission = data?.user?.permission_level === "ROOT";
 
@@ -68,6 +69,15 @@ const AddAdmin = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
+    if (!data?.user) {
+      toast({
+        title: "Error",
+        description: "Your session is invalid, please log out and back in!",
+      });
+
+      return;
+    }
+
     try {
       const raw = await fetch(`/api/admins`, {
         headers: {
@@ -75,7 +85,11 @@ const AddAdmin = () => {
           "Content-Type": "application/json",
         },
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          added_by_name: data?.user.name,
+          added_by_id: data?.user.id,
+        }),
       });
 
       const { success } = await raw.json();

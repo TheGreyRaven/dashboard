@@ -25,12 +25,15 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
   try {
-    const { discord_id, permission_level } = await _req.json();
+    const { discord_id, permission_level, added_by_name, added_by_id } =
+      await _req.json();
 
     await prisma.brp_web_admins.create({
       data: {
         discord_id: discord_id,
         permission_level: permission_level,
+        added_by_name: added_by_name,
+        added_by_id: added_by_id,
       },
     });
 
