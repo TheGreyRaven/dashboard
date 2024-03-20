@@ -1,14 +1,24 @@
 import { headers } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { Readable } from "stream";
 
 import { checkSecret } from "./utils";
 
-const POST = async (_req: NextRequest, _res: NextResponse) => {
+import type { NextApiRequest, NextApiResponse } from "next";
+async function buffer(readable: Readable) {
+  const chunks = [];
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
+const POST = async (_req: NextApiRequest, _res: NextApiResponse) => {
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
-  const webhookData = await _req.text();
+  const buf = await buffer(_req);
+  const rawBody = buf.toString("utf8");
 
-  const test2 = checkSecret(webhookData);
+  const test2 = checkSecret(rawBody);
 
   console.log({
     test2,
