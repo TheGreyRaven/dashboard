@@ -39,7 +39,11 @@ export const {
               }),
             }
           );
-          const { success } = await exists.json();
+          const { success, permission_level } = await exists.json();
+
+          if (success && permission_level) {
+            profile.permission_level = permission_level;
+          }
 
           return success ? success : "/?error=not-admin";
         } catch (err) {
@@ -61,30 +65,13 @@ export const {
       return token;
     },
     async session({ session, token: jwt }: any) {
-      if (jwt.profile) {
-        const id = jwt.profile.id;
-
-        const exists = await fetch(
-          `${process.env.LOCAL_URL}/api/proxy?id=${id}`,
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-              discord_email: jwt.profile.email,
-              discord_name: jwt.profile.username,
-            }),
-          }
-        );
-        const { permission_level } = await exists.json();
+      if (jwt.profile.permission_level) {
         session.user = {
           id: jwt.profile.id,
           name: jwt.profile.username,
           avatar: jwt.profile.avatar,
           email: jwt.profile.email,
-          permission_level: permission_level,
+          permission_level: jwt.profile.permission_level,
         };
       }
 
