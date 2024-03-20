@@ -1,3 +1,5 @@
 import { POST } from "./webhook_post";
 
-export { POST };
+const config = { api: { bodyParser: false } };
+
+export { POST, config };
