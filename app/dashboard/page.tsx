@@ -66,7 +66,7 @@ const Home = async () => {
             <CardContent>
               <ServerEconomy economy={money.economy} />
               <p className="text-xs text-muted-foreground">
-                12% from yesterday
+                {money.percentage} from yesterday
               </p>
             </CardContent>
           </Card>
