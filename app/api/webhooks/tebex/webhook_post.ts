@@ -12,6 +12,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
 
   // console.log(check);
   // console.log(check2);
+
   console.log({
     check,
     tebexSignature,
