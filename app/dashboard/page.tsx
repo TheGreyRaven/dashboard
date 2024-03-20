@@ -25,8 +25,56 @@ const getData = async () => {
   return dashboardData;
 };
 
+const setHealth = (_system: any) => {
+  if (!_system) {
+    return {
+      services: "Offline",
+      status: "All services offline",
+      color: "text-red-700",
+    };
+  }
+
+  let servicesOnline = 0;
+  const { database, fivem, bot } = _system;
+
+  if (database) servicesOnline++;
+  if (fivem) servicesOnline++;
+  if (bot) servicesOnline++;
+
+  switch (servicesOnline) {
+    case 1:
+      return {
+        services: "Outage",
+        status: "2 services are offline",
+        color: "text-red-700",
+      };
+
+    case 2:
+      return {
+        services: "Outage",
+        status: "1 service is offline",
+        color: "text-yellow-700",
+      };
+
+    case 3:
+      return {
+        services: "Online",
+        status: "All services online",
+        color: "text-green-500",
+      };
+
+    default:
+      return {
+        services: "Offline",
+        status: "All services offline",
+        color: "text-red-700",
+      };
+  }
+};
+
 const Home = async () => {
-  const { online, money, members } = await getData();
+  const { online, money, members, health } = await getData();
+  const { services, status, color } = setHealth(health);
 
   return (
     <ScrollArea className="h-full">
@@ -98,13 +146,11 @@ const Home = async () => {
               <CardTitle className="text-sm font-medium">
                 System Status
               </CardTitle>
-              <IconCircleFilled className="h-4 w-4 text-green-500" />
+              <IconCircleFilled className={`h-4 w-4 ${color}`} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">Online</div>
-              <p className="text-xs text-muted-foreground">
-                All systems operational
-              </p>
+              <div className="text-2xl font-bold">{services}</div>
+              <p className="text-xs text-muted-foreground">{status}</p>
             </CardContent>
           </Card>
         </div>

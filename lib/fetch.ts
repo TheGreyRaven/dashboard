@@ -1,6 +1,9 @@
 const fetchDashboardData = async () => {
+  /**
+   * TODO: This should probably be split up in order to prevent everything failing if once of the services does not respond.
+   */
   try {
-    const [online, money, members] = await Promise.all([
+    const [online, money, members, system] = await Promise.all([
       fetch(`${process.env.LOCAL_URL}/api/fivem/players-online?live=true`, {
         cache: "no-cache",
       }),
@@ -10,12 +13,14 @@ const fetchDashboardData = async () => {
       fetch(`${process.env.LOCAL_URL}/api/discord/members`, {
         cache: "no-cache",
       }),
+      fetch(`${process.env.LOCAL_URL}/api/systems`),
     ]);
 
     return {
       online: await online.json(),
       money: await money.json(),
       members: await members.json(),
+      health: await system.json(),
     };
   } catch (err) {
     console.error(err);
@@ -27,6 +32,11 @@ const fetchDashboardData = async () => {
       },
       money: 0,
       members: 0,
+      system: {
+        database: false,
+        fivem: false,
+        bot: false,
+      },
     };
   }
 };
