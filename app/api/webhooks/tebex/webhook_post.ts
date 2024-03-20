@@ -4,9 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkSecret } from "./utils";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
+  const headersList = headers();
+  const tebexSignature = headersList.get("X-Signature") ?? "";
   const test = await _req.json();
+  const check = checkSecret(test);
+
   console.log({
-    test,
+    tebexSignature,
+    check,
   });
 
   // const headersList = headers();
