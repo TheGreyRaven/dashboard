@@ -1,10 +1,13 @@
 import { AuthSignIn } from "@/components/auth";
 
-const SignIn = async () => {
+const SignIn = async (props: any) => {
+  const error = props.searchParams?.error ?? undefined;
   return (
-    <div className="h-screen flex items-center justify-center">
-      <AuthSignIn />
-    </div>
+    <>
+      <div className="h-screen flex items-center justify-center">
+        <AuthSignIn error={error} />
+      </div>
+    </>
   );
 };
 
