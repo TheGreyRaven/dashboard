@@ -25,6 +25,17 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
 
   const tebexData = JSON.parse(postBody);
 
+  if (tebexData.type === "validation.webhook") {
+    return Response.json(
+      {
+        id: tebexData.id,
+      },
+      {
+        status: 200,
+      }
+    );
+  }
+
   try {
     await prisma.brp_web_tebex_transactions.create({
       data: {

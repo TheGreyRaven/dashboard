@@ -1,6 +1,7 @@
 import { NavItem } from "@/types";
 import {
   IconDatabase,
+  IconDiamond,
   IconHome,
   IconTools,
   IconUser,
@@ -42,5 +43,12 @@ export const navItems: NavItem[] = [
     icon: <IconDatabase className="mr-2 h-4 w-4" />,
     label: "logs",
     accessRole: ["ROOT", "ADMIN"],
+  },
+  {
+    title: "Tebex",
+    href: "/dashboard/tebex",
+    icon: <IconDiamond className="mr-2 h-4 w-4" />,
+    label: "tebex",
+    accessRole: ["ROOT"],
   },
 ];
