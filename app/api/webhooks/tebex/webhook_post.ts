@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const SECRET = process.env.TEBEX_SECRET ?? "";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
-  const postData = await _req.json();
+  const postData = await _req.text();
   console.log(postData);
 
   const bodyHash = crypto
