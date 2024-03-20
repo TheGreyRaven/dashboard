@@ -37,11 +37,8 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
   if (live) {
     const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`);
     const players = await raw.json();
-    const currentlyOnline = players.length;
 
-    return Response.json({
-      online: currentlyOnline,
-    });
+    return Response.json(players);
   }
 
   const history =

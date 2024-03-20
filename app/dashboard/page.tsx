@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { fetchDashboardData } from "@/lib/fetch";
 import {
   IconBrandDiscord,
   IconCash,
@@ -18,46 +19,14 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 
-const REVALIDATE_TIME = process.env.NODE_ENV === "production" ? 60 : 0;
+const getData = async () => {
+  const dashboardData = await fetchDashboardData();
 
-const getPlayers = async () => {
-  try {
-    const [players, money, members] = await Promise.all([
-      fetch(`${process.env.FIVEM_SERVER_URL}/players.json`, {
-        next: {
-          revalidate: REVALIDATE_TIME,
-        },
-      }),
-      fetch(`${process.env.LOCAL_URL}/api/fivem/server-economy`, {
-        next: {
-          revalidate: REVALIDATE_TIME,
-        },
-      }),
-      fetch(`${process.env.LOCAL_URL}/api/discord/members`, {
-        next: {
-          revalidate: REVALIDATE_TIME,
-        },
-      }),
-    ]);
-
-    return {
-      players: await players.json(),
-      money: await money.json(),
-      members: await members.json(),
-    };
-  } catch (err) {
-    console.error(err);
-
-    return {
-      players: 0,
-      money: 0,
-      members: 0,
-    };
-  }
+  return dashboardData;
 };
 
 const Home = async () => {
-  const { players, money, members } = await getPlayers();
+  const { players, money, members } = await getData();
 
   return (
     <ScrollArea className="h-full">
@@ -70,6 +39,7 @@ const Home = async () => {
             width="32"
             height="32"
             className="ml-2"
+            priority
             unoptimized
           />
         </div>

@@ -1,32 +1,19 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+"use client";
+
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { IconCircleFilled } from "@tabler/icons-react";
 
-const PingThreshold = ({ ping }: { ping: number }) => {
+const pingThreshold = (ping: number) => {
   if (ping >= 0 && ping <= 60) {
-    return (
-      <div className="ml-auto flex items-center">
-        <p className="font-medium">{ping}ms</p>{" "}
-        <IconCircleFilled className="h-4 w-4 text-green-500 ml-2" />
-      </div>
-    );
+    return "text-green-500";
   }
 
   if (ping >= 60 && ping <= 80) {
-    return (
-      <div className="ml-auto flex items-center">
-        <p className="font-medium">{ping}ms</p>{" "}
-        <IconCircleFilled className="h-4 w-4 text-yellow-500 ml-2" />
-      </div>
-    );
+    return "text-yellow-500";
   }
 
-  return (
-    <div className="ml-auto flex items-center">
-      <p className="font-medium">{ping}ms</p>{" "}
-      <IconCircleFilled className="h-4 w-4 text-red-500 ml-2" />
-    </div>
-  );
+  return "text-red-500";
 };
 
 const PlayersOnline = ({ players }: { players: any }) => {
@@ -48,7 +35,12 @@ const PlayersOnline = ({ players }: { players: any }) => {
                 })}
               </p>
             </div>
-            <PingThreshold ping={player.ping} />
+            <div className="ml-auto flex items-center">
+              <p className="font-medium">{player.ping}ms</p>{" "}
+              <IconCircleFilled
+                className={`h-4 w-4 ${pingThreshold(player.ping)} ml-2`}
+              />
+            </div>
           </div>
         ))}
       </div>
