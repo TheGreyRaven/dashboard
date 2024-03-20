@@ -41,12 +41,9 @@ model brp_web_stats_players_online {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model brp_web_stats_server_money {
-  id            Int       @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   total_economy BigInt?
   timestamp     DateTime? @default(now()) @db.DateTime(0)
-
-  @@index([id], map: "id")
-  @@ignore
 }
 
 model players {

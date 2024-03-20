@@ -8,7 +8,7 @@ interface MoneyInterface {
   cash: number;
 }
 
-const GET = async (_req: NextRequest, _res: NextResponse) => {
+const getServerTotal = async () => {
   let serverEconomy = 0;
 
   try {
@@ -25,20 +25,55 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
       serverEconomy += Number(bank + cash + crypto);
     }
 
-    return Response.json({
+    return {
       success: true,
       error: null,
       economy: serverEconomy,
-    });
+    };
   } catch (err: any) {
-    return Response.json({
+    return {
       success: false,
       error: err.message,
       economy: 0,
-    });
+    };
   } finally {
     prisma.$disconnect();
   }
 };
 
-export { GET };
+const GET = async (_req: NextRequest, _res: NextResponse) => {
+  const { success, error, economy } = await getServerTotal();
+
+  return Response.json({ success, error, economy });
+};
+
+const POST = async (_req: NextRequest, _res: NextResponse) => {
+  const { success, error, economy } = await getServerTotal();
+
+  if (error) {
+    Response.json({
+      success: false,
+      error: error,
+    });
+  }
+
+  try {
+    await prisma.brp_web_stats_server_money.create({
+      data: {
+        total_economy: economy,
+      },
+    });
+
+    return Response.json({
+      success: true,
+      error: null,
+    });
+  } catch (err: any) {
+    return Response.json({
+      success: true,
+      error: err.message,
+    });
+  }
+};
+
+export { GET, POST };
