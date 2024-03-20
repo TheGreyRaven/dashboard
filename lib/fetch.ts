@@ -1,20 +1,14 @@
-const fetchDashboardData = async (validateTime = 60) => {
+const fetchDashboardData = async () => {
   try {
     const [players, money, members] = await Promise.all([
       fetch(`${process.env.LOCAL_URL}/api/fivem/players-online?live=true`, {
-        next: {
-          revalidate: validateTime,
-        },
+        cache: "no-cache",
       }),
       fetch(`${process.env.LOCAL_URL}/api/fivem/server-economy`, {
-        next: {
-          revalidate: validateTime,
-        },
+        cache: "no-cache",
       }),
       fetch(`${process.env.LOCAL_URL}/api/discord/members`, {
-        next: {
-          revalidate: validateTime,
-        },
+        cache: "no-cache",
       }),
     ]);
 
