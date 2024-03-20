@@ -7,13 +7,7 @@ import { navItems } from "@/constants/menu";
 
 import { DashboardNav } from "../dashboard-nav";
 
-// import { Playlist } from "../data/playlists";
-
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  // playlists: Playlist[];
-}
-
-export function MobileSidebar({ className }: SidebarProps) {
+const MobileSidebar = () => {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -36,4 +30,6 @@ export function MobileSidebar({ className }: SidebarProps) {
       </Sheet>
     </>
   );
-}
+};
+
+export { MobileSidebar };

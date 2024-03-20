@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import Header from "@/components/dashboard/layout/header";
-import Sidebar from "@/components/dashboard/layout/sidebar";
+import { Header } from "@/components/dashboard/layout/header";
+import { Sidebar } from "@/components/dashboard/layout/sidebar";
 import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {

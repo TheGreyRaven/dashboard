@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 import { DashboardNav } from "../dashboard-nav";
 
-export default function Sidebar() {
+const Sidebar = () => {
   return (
     <nav
       className={cn(`relative hidden h-screen border-r pt-16 lg:block w-72`)}
@@ -20,4 +20,6 @@ export default function Sidebar() {
       </div>
     </nav>
   );
-}
+};
+
+export { Sidebar };

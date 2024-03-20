@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import useSWR from "swr";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { fetcher } from "@/lib/utils";
 
 interface PlayerData {
