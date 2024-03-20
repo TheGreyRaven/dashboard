@@ -1,9 +1,9 @@
 import { headers } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 import { Readable } from "stream";
 
 import { checkSecret } from "./utils";
 
-import type { NextApiRequest, NextApiResponse } from "next";
 async function buffer(readable: Readable) {
   const chunks = [];
   for await (const chunk of readable) {
@@ -12,7 +12,7 @@ async function buffer(readable: Readable) {
   return Buffer.concat(chunks);
 }
 
-const POST = async (_req: NextApiRequest, _res: NextApiResponse) => {
+const POST = async (_req: any, _res: any) => {
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
   const buf = await buffer(_req);
