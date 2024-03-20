@@ -23,4 +23,30 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
   }
 };
 
-export { GET };
+const POST = async (_req: NextRequest, _res: NextResponse) => {
+  try {
+    const { discord_id, permission_level } = await _req.json();
+
+    await prisma.brp_web_admins.create({
+      data: {
+        discord_id: discord_id,
+        permission_level: permission_level,
+      },
+    });
+
+    return Response.json({
+      success: true,
+      error: null,
+    });
+  } catch (err: any) {
+    console.error(err);
+    return Response.json({
+      success: false,
+      error: err.message,
+    });
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+export { GET, POST };

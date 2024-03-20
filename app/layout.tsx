@@ -5,6 +5,7 @@ import { Inter as FontSans } from "next/font/google";
 
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
 import type { Metadata } from "next";
@@ -38,6 +39,7 @@ const Layout = async ({
           disableTransitionOnChange
         >
           <SessionProvider session={session}>{children}</SessionProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

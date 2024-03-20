@@ -44,7 +44,7 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
   const history =
     await prisma.$queryRaw`SELECT * from brp_web_stats_players_online WHERE timestamp > (NOW() - INTERVAL 24 HOUR)`;
 
-  return Response.json("OK");
+  return Response.json(history);
 };
 
 export { POST, GET };

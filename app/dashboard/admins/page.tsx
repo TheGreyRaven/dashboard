@@ -1,6 +1,7 @@
 import Image from "next/image";
 
-import { auth } from "@/app/api/auth/[...nextauth]/auth";
+import { AddAdmin } from "@/components/dashboard/functions/add-admin";
+import { RemoveAdmin } from "@/components/dashboard/functions/remove-admin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table,
   TableBody,
@@ -20,35 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { prisma } from "@/lib/prisma";
-import { brp_web_admins_permission_level } from "@prisma/client";
 import { IconX } from "@tabler/icons-react";
-
-/**
- * TODO: Move the addAdmin function to API endpoint and change the add admin component to client so we can disable the button and provide feedback to the user depending on result.
- * Maybe we can revalidate the path from the server action on success somehow.
- */
-
-const addAdmin = async (formData: FormData) => {
-  try {
-    const discord_id = formData.get("discord_id") as string;
-    const permission_level = formData.get("permission_level") as string;
-
-    await prisma.brp_web_admins.create({
-      data: {
-        discord_id: discord_id,
-        permission_level: permission_level as brp_web_admins_permission_level,
-      },
-    });
-
-    return true;
-  } catch (err) {
-    console.error(err);
-    return false;
-  } finally {
-    await prisma.$disconnect();
-  }
-};
 
 const getAdmins = async () => {
   const raw = await fetch(`${process.env.LOCAL_URL}/api/admins`, {
@@ -60,15 +32,9 @@ const getAdmins = async () => {
 };
 
 const Admins = async () => {
-  const session = await auth();
-
-  const hasPermission =
-    //@ts-expect-error
-    session?.user.permission_level === "ROOT";
-
   const { success, error, admins } = await getAdmins();
   return (
-    <ScrollArea className="h-full">
+    <div>
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <div className="flex items-center justify-between">
           <div className="flex items-baseline">
@@ -83,11 +49,9 @@ const Admins = async () => {
               unoptimized
             />
           </div>
-          <div>
-            <Button>Add Admin</Button>
-          </div>
+          <AddAdmin />
         </div>
-        <div className="w-full">
+        <div>
           <Card>
             <CardHeader>
               <CardTitle>Available admins</CardTitle>
@@ -145,9 +109,7 @@ const Admins = async () => {
                         {new Date(admin.added_timestamp).toLocaleString()}
                       </TableCell>
                       <TableCell>
-                        <Button variant="outline" size="icon">
-                          <IconX className="h-4 w-4" />
-                        </Button>
+                        <RemoveAdmin admin={admin} />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -155,84 +117,9 @@ const Admins = async () => {
               </Table>
             </CardContent>
           </Card>
-          {/* <Card className="col-span-5 md:col-span-2">
-            <CardHeader>
-              <CardTitle>Add Admin</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {hasPermission && (
-                <Alert className="border-destructive">
-                  <IconAlertTriangle className="h-4 w-4" />
-                  <AlertTitle>Heads up!</AlertTitle>
-                  <AlertDescription>
-                    You do not have the requried permission to add new admins,
-                    if you belive that this is an error then please contact one
-                    of the root admins.
-                  </AlertDescription>
-                </Alert>
-              )}
-              {/* <form
-                action={async (formData: FormData) => {
-                  "use server";
-                  await addAdmin(formData);
-
-                  revalidatePath(`/dashboard/admins`, "layout");
-                }}
-              >
-                <div className="grid w-full max-w-sm items-center gap-2">
-                  <div>
-                    <Label htmlFor="discord_id">Discord ID</Label>
-                    <Input
-                      id="discord_id"
-                      name="discord_id"
-                      type="text"
-                      placeholder="228856737959116800"
-                      disabled={!hasPermission}
-                    />
-                  </div>
-
-                  <div className="mt-4">
-                    <Label htmlFor="permission_level">Permission Level</Label>
-                    <Select disabled={!hasPermission} name="permission_level">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select permission level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="ROOT">ROOT</SelectItem>
-                          <SelectItem value="ADMIN">ADMIN</SelectItem>
-                          <SelectItem value="MOD">MOD</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="mt-4">
-                    <Button disabled={!hasPermission} className="w-full">
-                      Add admin
-                    </Button>
-                  </div>
-                  {!hasPermission && (
-                    <div className="mt-4">
-                      <Alert className="border-destructive">
-                        <IconAlertTriangle
-                          className="h-4 w-4"
-                          color="#761b1c"
-                        />
-                        <AlertTitle>Heads up!</AlertTitle>
-                        <AlertDescription>
-                          Only ROOT users can add admins!
-                        </AlertDescription>
-                      </Alert>
-                    </div>
-                  )}
-                </div>
-              </form>
-            </CardContent>
-          </Card> */}
         </div>
       </div>
-    </ScrollArea>
+    </div>
   );
 };
 
