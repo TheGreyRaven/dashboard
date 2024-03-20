@@ -65,7 +65,7 @@ export const {
       return token;
     },
     async session({ session, token: jwt }: any) {
-      if (jwt.profile.permission_level) {
+      if (jwt.profile.permission_level && !session.user.permission_level) {
         session.user = {
           id: jwt.profile.id,
           name: jwt.profile.username,
