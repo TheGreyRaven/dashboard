@@ -1,18 +1,20 @@
-import { buffer } from "micro";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 import { checkSecret } from "./utils";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
-  const postData = await _req.json();
+  const postData = (await _req.text()) as any;
+  const test = await _req.json();
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
 
-  const isValid = checkSecret(tebexSignature);
+  const isValid = checkSecret(postData);
+  const aaa = checkSecret(test);
 
   console.log({
     isValid: isValid,
+    test: aaa,
     tebexSignature: tebexSignature,
   });
 
@@ -30,7 +32,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
 
   return Response.json(
     {
-      id: postData.id,
+      id: test.id,
     },
     {
       status: 200,
