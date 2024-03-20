@@ -28,8 +28,6 @@ const getData = async () => {
 const Home = async () => {
   const { online, money, members } = await getData();
 
-  console.log(online.players.length > online.today);
-
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
