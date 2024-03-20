@@ -7,7 +7,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
   const test2 = await _req.json();
-  const check = checkSecret(test2);
+  const check = checkSecret(JSON.stringify(test2));
   // const check2 = checkSecret(JSON.stringify(test));
 
   // console.log(check);
