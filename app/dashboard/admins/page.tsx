@@ -5,31 +5,15 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
 import { prisma } from "@/lib/prisma";
 import { brp_web_admins_permission_level } from "@prisma/client";
@@ -62,7 +46,9 @@ const addAdmin = async (formData: FormData) => {
 };
 
 const getAdmins = async () => {
-  const raw = await fetch(`${process.env.LOCAL_URL}/api/admins`);
+  const raw = await fetch(`${process.env.LOCAL_URL}/api/admins`, {
+    cache: 'no-cache'
+  });
   const response = await raw.json();
 
   return response;
