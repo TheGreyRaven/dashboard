@@ -64,7 +64,7 @@ const Home = async () => {
               <IconCash className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <ServerEconomy economy={money} />
+              <ServerEconomy economy={money.economy} />
               <p className="text-xs text-muted-foreground">
                 12% from yesterday
               </p>

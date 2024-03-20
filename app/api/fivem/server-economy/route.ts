@@ -2,17 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 
-const parseJson = (json: any) => {
-  try {
-    const data = JSON.parse(json);
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-  return {
-    bank: 0,
-  };
-};
+interface MoneyInterface {
+  bank: number;
+  crypto: number;
+  cash: number;
+}
 
 const GET = async (_req: NextRequest, _res: NextResponse) => {
   let serverEconomy = 0;
@@ -21,35 +15,21 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
     const data = await prisma.players.findMany({
       select: {
         money: true,
-        inventory: true,
       },
     });
 
     for (const index in data) {
-      try {
-        const { money, inventory } = data[index];
+      const { money } = data[index];
+      const { cash, bank, crypto }: MoneyInterface = JSON.parse(money);
 
-        const balance = parseJson(money);
-        const { bank } = balance;
-
-        const inv = parseJson(inventory);
-        let cash = 0;
-
-        for (const index in inv) {
-          const pInv = inv[index];
-
-          if (pInv?.name === "cash") {
-            cash = pInv?.amount;
-          }
-        }
-
-        serverEconomy += Math.floor(bank + cash);
-      } catch (err) {
-        console.error(err);
-      }
+      serverEconomy += Number(bank + cash + crypto);
     }
-    await prisma.$disconnect();
-    return Response.json(serverEconomy);
+
+    return Response.json({
+      success: true,
+      error: null,
+      economy: serverEconomy,
+    });
   } catch (err: any) {
     return Response.json({
       success: false,
