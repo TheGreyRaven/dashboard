@@ -55,7 +55,6 @@ const AddAdmin = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const { data } = useSession();
-  console.log(data);
   //@ts-expect-error
   const hasPermission = data?.user?.permission_level === "ROOT";
 
