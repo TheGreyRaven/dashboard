@@ -1,4 +1,3 @@
-import { buffer } from "micro";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -8,9 +7,6 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
   const webhookData = await _req.text();
-
-  // @ts-expect-error
-  const buf = await buffer(_req);
 
   const test2 = checkSecret(webhookData);
 
