@@ -5,8 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkSecret } from "./utils";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
-  //@ts-expect-error
-  const postData = (await buffer(_req.body)) as any;
+  const postData = await _req.json();
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
 
