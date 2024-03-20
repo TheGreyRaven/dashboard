@@ -1,23 +1,28 @@
-import { revalidatePath } from "next/cache";
 import Image from "next/image";
 
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-    Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue
-} from "@/components/ui/select";
-import {
-    Table, TableBody, TableCell, TableHead, TableHeader, TableRow
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { prisma } from "@/lib/prisma";
 import { brp_web_admins_permission_level } from "@prisma/client";
-import { IconAlertTriangle, IconX } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 
 /**
  * TODO: Move the addAdmin function to API endpoint and change the add admin component to client so we can disable the button and provide feedback to the user depending on result.
@@ -47,7 +52,7 @@ const addAdmin = async (formData: FormData) => {
 
 const getAdmins = async () => {
   const raw = await fetch(`${process.env.LOCAL_URL}/api/admins`, {
-    cache: 'no-cache'
+    cache: "no-cache",
   });
   const response = await raw.json();
 
@@ -65,28 +70,36 @@ const Admins = async () => {
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-        <div className="flex items-baseline">
-          <h2 className="text-3xl font-bold tracking-tight">Admins</h2>
-          <Image
-            src="/emoji/Comet.png"
-            alt="Waving Hand"
-            width="32"
-            height="32"
-            className="ml-2"
-            priority
-            unoptimized
-          />
+        <div className="flex items-center justify-between">
+          <div className="flex items-baseline">
+            <h2 className="text-3xl font-bold tracking-tight">Admins</h2>
+            <Image
+              src="/emoji/Comet.png"
+              alt="Waving Hand"
+              width="32"
+              height="32"
+              className="ml-2"
+              priority
+              unoptimized
+            />
+          </div>
+          <div>
+            <Button>Add Admin</Button>
+          </div>
         </div>
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-5">
+        <div className="w-full">
+          <Card>
             <CardHeader>
-              <CardTitle>Admins available</CardTitle>
+              <CardTitle>Available admins</CardTitle>
               <CardDescription>
-                Admins available: {admins.length}
+                Number of admins: {admins.length}
               </CardDescription>
             </CardHeader>
             <CardContent className="pl-2">
               <Table>
+                <TableCaption>
+                  These are just the admins with dashboard access.
+                </TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="min-w-[150px]">
@@ -142,12 +155,23 @@ const Admins = async () => {
               </Table>
             </CardContent>
           </Card>
-          <Card className="col-span-5 md:col-span-2">
+          {/* <Card className="col-span-5 md:col-span-2">
             <CardHeader>
               <CardTitle>Add Admin</CardTitle>
             </CardHeader>
             <CardContent>
-              <form
+              {hasPermission && (
+                <Alert className="border-destructive">
+                  <IconAlertTriangle className="h-4 w-4" />
+                  <AlertTitle>Heads up!</AlertTitle>
+                  <AlertDescription>
+                    You do not have the requried permission to add new admins,
+                    if you belive that this is an error then please contact one
+                    of the root admins.
+                  </AlertDescription>
+                </Alert>
+              )}
+              {/* <form
                 action={async (formData: FormData) => {
                   "use server";
                   await addAdmin(formData);
@@ -205,7 +229,7 @@ const Admins = async () => {
                 </div>
               </form>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </ScrollArea>
