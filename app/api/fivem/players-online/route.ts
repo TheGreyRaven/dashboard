@@ -29,4 +29,25 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
   });
 };
 
-export { POST };
+const GET = async (_req: NextRequest, _res: NextResponse) => {
+  const url = new URL(_req.url);
+
+  const live = url.searchParams.get("live") ?? false;
+
+  if (live) {
+    const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`);
+    const players = await raw.json();
+    const currentlyOnline = players.length;
+
+    return Response.json({
+      online: currentlyOnline,
+    });
+  }
+
+  const history =
+    await prisma.$queryRaw`SELECT * from brp_web_stats_players_online WHERE timestamp > (NOW() - INTERVAL 24 HOUR)`;
+
+  return Response.json("OK");
+};
+
+export { POST, GET };
