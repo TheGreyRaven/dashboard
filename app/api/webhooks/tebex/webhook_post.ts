@@ -1,10 +1,17 @@
-import * as crypto from "crypto";
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const SECRET = process.env.TEBEX_SECRET ?? "";
+import { checkSecret } from "./utils";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
-  const postData = await _req.json();
+  const postData = (await _req.text()) as any;
+  const headersList = headers();
+  const tebexSignature = headersList.get("X-Signature") ?? "";
+
+  const isValid = checkSecret(tebexSignature);
+
+  console.log(isValid);
+
   // console.log(postData);
 
   // const bodyHash = crypto
