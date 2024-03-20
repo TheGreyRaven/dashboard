@@ -1,6 +1,6 @@
 const fetchDashboardData = async () => {
   try {
-    const [players, money, members] = await Promise.all([
+    const [online, money, members] = await Promise.all([
       fetch(`${process.env.LOCAL_URL}/api/fivem/players-online?live=true`, {
         cache: "no-cache",
       }),
@@ -13,7 +13,7 @@ const fetchDashboardData = async () => {
     ]);
 
     return {
-      players: await players.json(),
+      online: await online.json(),
       money: await money.json(),
       members: await members.json(),
     };
@@ -21,7 +21,10 @@ const fetchDashboardData = async () => {
     console.error(err);
 
     return {
-      players: 0,
+      online: {
+        today: 0,
+        players: [],
+      },
       money: 0,
       members: 0,
     };

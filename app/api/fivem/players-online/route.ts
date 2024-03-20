@@ -38,7 +38,19 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
     const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`);
     const players = await raw.json();
 
-    return Response.json(players);
+    const today = await prisma.brp_web_stats_players_online.findFirst({
+      select: {
+        players_online: true,
+      },
+      orderBy: {
+        timestamp: "desc",
+      },
+    });
+
+    return Response.json({
+      today: today?.players_online,
+      players: players,
+    });
   }
 
   const history =

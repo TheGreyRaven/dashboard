@@ -26,7 +26,9 @@ const getData = async () => {
 };
 
 const Home = async () => {
-  const { players, money, members } = await getData();
+  const { online, money, members } = await getData();
+
+  console.log(online.players.length > online.today);
 
   return (
     <ScrollArea className="h-full">
@@ -52,8 +54,15 @@ const Home = async () => {
               <IconUsers className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{players.length}/90</div>
-              <p className="text-xs text-muted-foreground">Max today: 90</p>
+              <div className="text-2xl font-bold">
+                {online.players.length}/90
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Max today:{" "}
+                {online.players.length > online.today
+                  ? online.players.length
+                  : online.today}
+              </p>
             </CardContent>
           </Card>
           <Card>
@@ -113,10 +122,12 @@ const Home = async () => {
           <Card className="col-span-4 md:col-span-3">
             <CardHeader>
               <CardTitle>Online Players</CardTitle>
-              <CardDescription>Currently: {players.length}/90</CardDescription>
+              <CardDescription>
+                Currently: {online.players.length}/90
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <PlayersOnline players={players} />
+              <PlayersOnline players={online.players} />
             </CardContent>
           </Card>
         </div>
