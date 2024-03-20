@@ -1,10 +1,12 @@
+import { buffer } from "micro";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 import { checkSecret } from "./utils";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
-  const postData = (await _req.text()) as any;
+  //@ts-expect-error
+  const postData = (await buffer(_req)) as any;
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
 
