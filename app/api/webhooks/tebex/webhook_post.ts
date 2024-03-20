@@ -6,17 +6,21 @@ import { checkSecret } from "./utils";
 const POST = async (_req: NextRequest, _res: NextResponse) => {
   const postData = (await _req.text()) as any;
   const test = await _req.json();
-  const headersList = headers();
-  const tebexSignature = headersList.get("X-Signature") ?? "";
-
-  const isValid = checkSecret(postData);
-  const aaa = checkSecret(test);
-
   console.log({
-    isValid: isValid,
-    test: aaa,
-    tebexSignature: tebexSignature,
+    postData,
+    test,
   });
+  // const headersList = headers();
+  // const tebexSignature = headersList.get("X-Signature") ?? "";
+
+  // const isValid = checkSecret(postData);
+  // const aaa = checkSecret(test);
+
+  // console.log({
+  //   isValid: isValid,
+  //   test: aaa,
+  //   tebexSignature: tebexSignature,
+  // });
 
   // console.log(postData);
 
@@ -32,7 +36,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
 
   return Response.json(
     {
-      id: test.id,
+      id: "ok",
     },
     {
       status: 200,
