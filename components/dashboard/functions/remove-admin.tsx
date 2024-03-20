@@ -13,7 +13,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,24 +43,20 @@ const RemoveAdmin = ({ admin }: { admin: any }) => {
             permanently:
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-1 items-center gap-4">
-                <Label htmlFor="name" className="text-white">
-                  Discord name
-                </Label>
+                <Label htmlFor="name">Discord name</Label>
                 <Input
                   disabled
                   id="name"
                   value={admin.discord_name}
-                  className="text-white disabled:opacity-100"
+                  className="disabled:opacity-100"
                 />
               </div>
               <div className="grid grid-cols-1 items-center gap-4">
-                <Label htmlFor="username" className="text-white">
-                  Discord ID
-                </Label>
+                <Label htmlFor="username">Discord ID</Label>
                 <Input
                   disabled
                   value={admin.discord_id}
-                  className="text-white disabled:opacity-100"
+                  className="disabled:opacity-100"
                 />
               </div>
             </div>
