@@ -7,9 +7,13 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
   const test = await _req.json();
-  const check = checkSecret(test);
+  const test2 = await _req.text();
+  const check = checkSecret(test2);
+  const check2 = checkSecret(JSON.stringify(test));
 
   console.log(check);
+  console.log(check2);
+  console.log(test2);
   console.log(tebexSignature);
 
   // const headersList = headers();
