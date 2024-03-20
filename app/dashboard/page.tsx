@@ -166,17 +166,7 @@ const Home = async () => {
               <PlayerCharts />
             </CardContent>
           </Card>
-          <Card className="col-span-4 md:col-span-3">
-            <CardHeader>
-              <CardTitle>Online Players</CardTitle>
-              <CardDescription>
-                Currently: {online.players.length}/90
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PlayersOnline players={online.players} />
-            </CardContent>
-          </Card>
+          <PlayersOnline />
         </div>
       </div>
     </ScrollArea>

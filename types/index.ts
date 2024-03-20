@@ -9,6 +9,19 @@ export interface NavItem {
   accessRole: Array<"ROOT" | "ADMIN" | "MOD">;
 }
 
+export interface LiveServerObject {
+  today: number;
+  players: PlayerObject[];
+}
+
+export interface PlayerObject {
+  endpoint: string;
+  id: number;
+  identifiers: string[];
+  name: string;
+  ping: number;
+}
+
 export interface NavItemWithChildren extends NavItem {
   items: NavItemWithChildren[];
 }
