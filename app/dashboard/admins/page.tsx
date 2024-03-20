@@ -1,5 +1,8 @@
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
 
+import { auth } from "@/app/api/auth/[...nextauth]/auth";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,20 +32,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IconX } from "@tabler/icons-react";
+import { prisma } from "@/lib/prisma";
+import { brp_web_admins_permission_level } from "@prisma/client";
+import { IconAlertTriangle, IconX } from "@tabler/icons-react";
 
-const ADMIN_USERS = [
-  {
-    id: 1,
-    permission_level: "ROOT",
-    discord_name: "thegreyraven",
-    discord_email: "oscar.braberg@dotit.se",
-    discord_id: "228856737959116800",
-    added_by_name: null,
-    added_by_id: null,
-    added_timestamp: "2024-03-17 19:06:41",
-  },
-];
+/**
+ * TODO: Move the addAdmin function to API endpoint and change the add admin component to client so we can disable the button and provide feedback to the user depending on result.
+ */
+
+const addAdmin = async (formData: FormData) => {
+  try {
+    const discord_id = formData.get("discord_id") as string;
+    const permission_level = formData.get("permission_level") as string;
+
+    await prisma.brp_web_admins.create({
+      data: {
+        discord_id: discord_id,
+        permission_level: permission_level as brp_web_admins_permission_level,
+      },
+    });
+
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
 
 const getAdmins = async () => {
   const raw = await fetch(`${process.env.LOCAL_URL}/api/admins`);
@@ -52,6 +69,12 @@ const getAdmins = async () => {
 };
 
 const Admins = async () => {
+  const session = await auth();
+
+  const hasPermission =
+    //@ts-expect-error
+    session?.user.permission_level === "ROOT";
+
   const { success, error, admins } = await getAdmins();
   return (
     <ScrollArea className="h-full">
@@ -101,10 +124,14 @@ const Admins = async () => {
                         <Badge>{admin.permission_level}</Badge>
                       </TableCell>
                       <TableCell>
-                        {admin.discord_name === "" ? "N/A" : admin.discord_name}
+                        {admin.discord_name === "" ||
+                        admin.discord_name === null
+                          ? "N/A"
+                          : admin.discord_name}
                       </TableCell>
                       <TableCell>
-                        {admin.discord_email === ""
+                        {admin.discord_email === "" ||
+                        admin.discord_email === null
                           ? "N/A"
                           : admin.discord_email}
                       </TableCell>
@@ -134,20 +161,29 @@ const Admins = async () => {
               <CardTitle>Add Admin</CardTitle>
             </CardHeader>
             <CardContent>
-              <form>
+              <form
+                action={async (formData: FormData) => {
+                  "use server";
+                  await addAdmin(formData);
+
+                  revalidatePath(`/dashboard/admins`, "layout");
+                }}
+              >
                 <div className="grid w-full max-w-sm items-center gap-2">
                   <div>
                     <Label htmlFor="discord_id">Discord ID</Label>
                     <Input
                       id="discord_id"
+                      name="discord_id"
                       type="text"
                       placeholder="228856737959116800"
+                      disabled={!hasPermission}
                     />
                   </div>
 
                   <div className="mt-4">
                     <Label htmlFor="permission_level">Permission Level</Label>
-                    <Select>
+                    <Select disabled={!hasPermission} name="permission_level">
                       <SelectTrigger>
                         <SelectValue placeholder="Select permission level" />
                       </SelectTrigger>
@@ -162,8 +198,24 @@ const Admins = async () => {
                   </div>
 
                   <div className="mt-4">
-                    <Button className="w-full">Add admin</Button>
+                    <Button disabled={!hasPermission} className="w-full">
+                      Add admin
+                    </Button>
                   </div>
+                  {!hasPermission && (
+                    <div className="mt-4">
+                      <Alert className="border-destructive">
+                        <IconAlertTriangle
+                          className="h-4 w-4"
+                          color="#761b1c"
+                        />
+                        <AlertTitle>Heads up!</AlertTitle>
+                        <AlertDescription>
+                          Only ROOT users can add admins!
+                        </AlertDescription>
+                      </Alert>
+                    </div>
+                  )}
                 </div>
               </form>
             </CardContent>
