@@ -4,10 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkSecret } from "./utils";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
-  const postData = (await _req.text()) as any;
   const test = await _req.json();
   console.log({
-    postData,
     test,
   });
 
