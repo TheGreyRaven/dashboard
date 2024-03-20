@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { FullSkeleton } from "@/components/ui/full-skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetcher } from "@/lib/utils";
 import { LiveServerObject, PlayerObject } from "@/types";
@@ -89,29 +90,34 @@ const PlayersOnline = () => {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-80" type="always">
-          <div className="space-y-8 pr-4">
+          <div className="space-y-8 pr-4 pb-4">
             {data?.players?.map((player, key: number) => (
-              <div className="flex items-center" key={key}>
-                <Avatar className="h-9 w-9">
-                  <AvatarFallback>{player?.id}</AvatarFallback>
-                </Avatar>
-                <div className="ml-4 grid grid-rows-2 grid-flow-col gap-0 pr-2">
-                  <p className="text-sm font-medium leading-none truncate">
-                    {player?.name}
-                  </p>
-                  <p className="text-sm text-muted-foreground truncate">
-                    {player?.identifiers?.filter((identifier: string) => {
-                      return identifier?.includes("license:");
-                    })}
-                  </p>
+              <>
+                <div className="flex items-center" key={key}>
+                  <Avatar className="h-9 w-9">
+                    <AvatarFallback>{player?.id}</AvatarFallback>
+                  </Avatar>
+                  <div className="ml-4 grid grid-rows-2 grid-flow-col gap-0 pr-2">
+                    <p className="text-sm font-medium leading-none truncate">
+                      {player?.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground truncate">
+                      {player?.identifiers?.filter((identifier: string) => {
+                        return identifier?.includes("license:");
+                      })}
+                    </p>
+                  </div>
+                  <div className="ml-auto flex items-center">
+                    <p className="font-medium">{player.ping}ms</p>{" "}
+                    <IconCircleFilled
+                      className={`h-4 w-4 ${pingThreshold(player.ping)} ml-2`}
+                    />
+                  </div>
                 </div>
-                <div className="ml-auto flex items-center">
-                  <p className="font-medium">{player.ping}ms</p>{" "}
-                  <IconCircleFilled
-                    className={`h-4 w-4 ${pingThreshold(player.ping)} ml-2`}
-                  />
-                </div>
-              </div>
+                {data.players.length !== key + 1 && (
+                  <Separator orientation="horizontal" className="w-full" />
+                )}
+              </>
             ))}
           </div>
         </ScrollArea>
