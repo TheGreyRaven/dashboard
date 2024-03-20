@@ -42,7 +42,7 @@ model brp_web_stats_players_online {
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model brp_web_stats_server_money {
   id            Int       @id @default(autoincrement())
-  total_economy Float?
+  total_economy Float?    @db.Float
   timestamp     DateTime? @default(now()) @db.DateTime(0)
 }
 
@@ -78,6 +78,17 @@ model players {
   @@index([id], map: "id")
   @@index([last_updated], map: "last_updated")
   @@index([license], map: "license")
+}
+
+model brp_web_tebex_transactions {
+  id             Int      @id @default(autoincrement())
+  transaction_id String   @unique(map: "transaction_id") @db.VarChar(96)
+  status         String   @db.LongText
+  created_at     DateTime @db.Timestamp(0)
+  price_paid     String   @db.LongText
+  payment_method String   @db.LongText
+  customer       String   @db.LongText
+  products       String   @db.LongText
 }
 
 enum brp_web_admins_permission_level {

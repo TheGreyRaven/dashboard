@@ -1,47 +1,55 @@
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { Readable } from "stream";
+
+import { prisma } from "@/lib/prisma";
 
 import { checkSecret } from "./utils";
-
-async function buffer(readable: Readable) {
-  const chunks = [];
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-  }
-  return Buffer.concat(chunks);
-}
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
-  //@ts-expect-error
-  const buf = await buffer(_req.body);
-  const rawBody = buf.toString("utf8");
+  const postBody = await _req.text();
+  const isValid = checkSecret(postBody, tebexSignature);
 
-  const test2 = checkSecret(rawBody);
+  if (!isValid) {
+    return Response.json(
+      {
+        message:
+          "Invalid webhook secret, please make sure you have the correct webhook secret",
+      },
+      {
+        status: 403,
+      }
+    );
+  }
 
-  console.log({
-    test2,
-    tebexSignature,
-  });
+  const tebexData = JSON.parse(postBody);
 
-  // if (!webhookData.id || !tebexSignature) {
-  //   return Response.json(
-  //     {
-  //       error: "Missing required data",
-  //     },
-  //     {
-  //       status: 400,
-  //     }
-  //   );
-  // }
-
-  // const
+  try {
+    await prisma.brp_web_tebex_transactions.create({
+      data: {
+        transaction_id: tebexData.subject.transaction_id,
+        status: JSON.stringify(tebexData.subject.status),
+        created_at: tebexData.subject.created_at,
+        price_paid: JSON.stringify(tebexData.subject.price_paid),
+        payment_method: JSON.stringify(tebexData.subject.payment_method),
+        customer: JSON.stringify(tebexData.subject.customer),
+        products: JSON.stringify(tebexData.subject.products),
+      },
+    });
+  } catch (err: any) {
+    console.error(err);
+    return Response.json({
+      message: "Failed to add transaction",
+      error: err.message,
+    });
+  } finally {
+    prisma.$disconnect();
+  }
 
   return Response.json(
     {
-      id: "ok",
+      id: tebexData.id,
     },
     {
       status: 200,
