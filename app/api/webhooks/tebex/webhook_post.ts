@@ -17,7 +17,9 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
   //   .digest("hex");
   // console.log("finalHash", finalHash);
 
-  return Response.json("ok");
+  return Response.json("ok", {
+    status: 200,
+  });
 };
 
 export { POST };
