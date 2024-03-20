@@ -2,6 +2,53 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 
+const DELETE = async (_req: NextRequest, _res: NextResponse) => {
+  const { discord_id } = await _req.json();
+
+  if (!discord_id) {
+    return Response.json(
+      {
+        success: false,
+        error: "Missing Discord ID",
+      },
+      {
+        status: 400,
+      }
+    );
+  }
+
+  try {
+    await prisma.brp_web_admins.delete({
+      where: {
+        discord_id: discord_id,
+      },
+    });
+
+    return Response.json(
+      {
+        success: true,
+        error: null,
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch (err: any) {
+    console.error(err);
+    return Response.json(
+      {
+        success: false,
+        error: err.message,
+      },
+      {
+        status: 500,
+      }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
 const GET = async (_req: NextRequest, _res: NextResponse) => {
   try {
     const admins = await prisma.brp_web_admins.findMany();
@@ -13,11 +60,16 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
     });
   } catch (err: any) {
     console.error(err);
-    return Response.json({
-      success: false,
-      error: err.message,
-      admins: null,
-    });
+    return Response.json(
+      {
+        success: false,
+        error: err.message,
+        admins: null,
+      },
+      {
+        status: 200,
+      }
+    );
   } finally {
     await prisma.$disconnect();
   }
@@ -37,19 +89,29 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
       },
     });
 
-    return Response.json({
-      success: true,
-      error: null,
-    });
+    return Response.json(
+      {
+        success: true,
+        error: null,
+      },
+      {
+        status: 200,
+      }
+    );
   } catch (err: any) {
     console.error(err);
-    return Response.json({
-      success: false,
-      error: err.message,
-    });
+    return Response.json(
+      {
+        success: false,
+        error: err.message,
+      },
+      {
+        status: 500,
+      }
+    );
   } finally {
     await prisma.$disconnect();
   }
 };
 
-export { GET, POST };
+export { GET, POST, DELETE };

@@ -3,7 +3,6 @@ import Image from "next/image";
 import { AddAdmin } from "@/components/dashboard/functions/add-admin";
 import { RemoveAdmin } from "@/components/dashboard/functions/remove-admin";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -20,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IconX } from "@tabler/icons-react";
 
 const getAdmins = async () => {
   const raw = await fetch(`${process.env.LOCAL_URL}/api/admins`, {
