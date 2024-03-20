@@ -12,10 +12,11 @@ async function buffer(readable: Readable) {
   return Buffer.concat(chunks);
 }
 
-const POST = async (_req: any, _res: any) => {
+const POST = async (_req: NextRequest, _res: NextResponse) => {
   const headersList = headers();
   const tebexSignature = headersList.get("X-Signature") ?? "";
-  const buf = await buffer(_req);
+  //@ts-expect-error
+  const buf = await buffer(_req.body);
   const rawBody = buf.toString("utf8");
 
   const test2 = checkSecret(rawBody);
