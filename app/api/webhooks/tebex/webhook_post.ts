@@ -10,7 +10,10 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
 
   const isValid = checkSecret(tebexSignature);
 
-  console.log(isValid);
+  console.log({
+    isValid: isValid,
+    tebexSignature: tebexSignature,
+  });
 
   // console.log(postData);
 
