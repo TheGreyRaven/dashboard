@@ -30,20 +30,40 @@ model brp_web_logs {
 model brp_web_stats_discord_members {
   id        Int      @id @default(autoincrement())
   members   Int
-  timestamp DateTime @default(now()) @db.Timestamp(0)
+  timestamp DateTime @default(dbgenerated("(date_format(current_timestamp(),'%Y-%m-%d %H:%i:00'))")) @db.Timestamp(0)
+}
+
+model brp_web_stats_player_economy {
+  id             Int      @id @default(autoincrement())
+  license        String   @db.VarChar(255)
+  citizen_id     String   @db.VarChar(50)
+  character_id   Int?
+  character_name String   @db.VarChar(255)
+  total_economy  Float?   @db.Float
+  timestamp      DateTime @default(dbgenerated("(date_format(current_timestamp(),'%Y-%m-%d %H:%i:00'))")) @db.Timestamp(0)
 }
 
 model brp_web_stats_players_online {
   id             Int      @id @default(autoincrement())
   players_online Int
-  timestamp      DateTime @default(now()) @db.Timestamp(0)
+  timestamp      DateTime @default(dbgenerated("(date_format(current_timestamp(),'%Y-%m-%d %H:%i:00'))")) @db.Timestamp(0)
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model brp_web_stats_server_money {
   id            Int       @id @default(autoincrement())
   total_economy Float?    @db.Float
-  timestamp     DateTime? @default(now()) @db.DateTime(0)
+  timestamp     DateTime? @default(dbgenerated("(date_format(current_timestamp(),'%Y-%m-%d %H:%i:00'))")) @db.DateTime(0)
+}
+
+model brp_web_tebex_transactions {
+  id             Int      @id @default(autoincrement())
+  transaction_id String   @unique(map: "transaction_id") @db.VarChar(96)
+  status         String   @db.LongText
+  created_at     DateTime @db.Timestamp(0)
+  price_paid     String   @db.LongText
+  payment_method String   @db.LongText
+  customer       String   @db.LongText
+  products       String   @db.LongText
 }
 
 model players {
@@ -78,17 +98,6 @@ model players {
   @@index([id], map: "id")
   @@index([last_updated], map: "last_updated")
   @@index([license], map: "license")
-}
-
-model brp_web_tebex_transactions {
-  id             Int      @id @default(autoincrement())
-  transaction_id String   @unique(map: "transaction_id") @db.VarChar(96)
-  status         String   @db.LongText
-  created_at     DateTime @db.Timestamp(0)
-  price_paid     String   @db.LongText
-  payment_method String   @db.LongText
-  customer       String   @db.LongText
-  products       String   @db.LongText
 }
 
 enum brp_web_admins_permission_level {
