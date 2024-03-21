@@ -20,7 +20,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm px-4 py-2">
         {payload.map((ele: any, index: any) => (
           <span className="text-sm" key={index}>
-            Economy :{" "}
+            Economy:{" "}
             {new Intl.NumberFormat("sv-SE", {
               style: "currency",
               currency: "SEK",
@@ -62,7 +62,7 @@ const ServerGraph = ({ data }: { data: any }) => {
             <CardContent className="h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart width={500} height={300} data={data}>
-                  <CartesianGrid className="opacity-50" />
+                  <CartesianGrid className="opacity-25" />
                   <XAxis dataKey="timestamp" />
                   <YAxis tick={false} hide />
                   <Tooltip
