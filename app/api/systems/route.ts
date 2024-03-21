@@ -19,8 +19,10 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
   }
 
   try {
-    await fetch(`${process.env.FIVEM_SERVER_URL}/info.json`);
-    HealthCheck.fivem = true;
+    const fivem = await fetch(`${process.env.FIVEM_SERVER_URL}/info.json`);
+    if (fivem.ok) {
+      HealthCheck.fivem = true;
+    }
   } catch (err) {
     console.error(err);
   }

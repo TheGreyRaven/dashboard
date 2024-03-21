@@ -1,15 +1,9 @@
 import Image from "next/image";
 
-import { PlayerCharts } from "@/components/dashboard/charts/players";
+import { PlayerCharts } from "@/components/dashboard/charts/players-online/players";
 import { PlayersOnline } from "@/components/dashboard/stats/players-online";
 import { ServerEconomy } from "@/components/dashboard/stats/server-economy";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchDashboardData } from "@/lib/fetch";
 import {

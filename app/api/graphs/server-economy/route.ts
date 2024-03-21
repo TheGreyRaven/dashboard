@@ -9,18 +9,19 @@ interface GraphMoney {
 
 const GET = async (_req: NextRequest, _res: NextResponse) => {
   try {
-    const data =
-      await prisma.$queryRaw`SELECT DATE_FORMAT(\`timestamp\`, '%H:%i') AS timestamp, \`total_economy\` FROM brp_web_stats_server_money WHERE timestamp > (NOW() - INTERVAL 24 HOUR) ORDER BY \`timestamp\` ASC`;
-
-    // @ts-expect-error
-    const sorted = data?.sort((x: GraphMoney, y: GraphMoney) => {
-      return new Date(x.timestamp) < new Date(y.timestamp);
-    });
+    const data = await prisma.$queryRaw`
+        SELECT 
+          DATE_FORMAT(\`timestamp\`, '%H:%i') AS time, \`total_economy\`
+        FROM
+            (SELECT @row:=0) temp, 
+            brp_web_stats_server_money 
+        WHERE (@row:=@row + 1) % 2 = 1 AND timestamp > (NOW() - INTERVAL 24 HOUR) ORDER BY \`timestamp\` ASC
+      `;
 
     return Response.json({
       success: true,
       error: null,
-      data: sorted,
+      data: data,
     });
   } catch (err: any) {
     console.error(err);

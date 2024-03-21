@@ -6,6 +6,7 @@ import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
   title: "Bygden - Dashboard",
+  description: "Administrative dashboard for Bygden RP",
 };
 
 const RootLayout = ({

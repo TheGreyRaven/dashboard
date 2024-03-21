@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-import { AddAdmin } from "@/components/dashboard/functions/add-admin";
-import { RemoveAdmin } from "@/components/dashboard/functions/remove-admin";
+import { AddAdmin } from "@/components/dashboard/functions/admin/add-admin";
+import { RemoveAdmin } from "@/components/dashboard/functions/admin/remove-admin";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,

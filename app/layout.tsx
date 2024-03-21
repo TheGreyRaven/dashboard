@@ -16,6 +16,7 @@ const fontSans = FontSans({
 
 export const metadata: Metadata = {
   title: "Bygden - Welcome",
+  description: "In order to continue, please sign in!",
 };
 
 const Layout = async ({

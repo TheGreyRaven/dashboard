@@ -35,20 +35,23 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
   const live = url.searchParams.get("live") ?? false;
 
   if (live) {
+    const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
     const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`);
     const players = await raw.json();
 
-    const today = await prisma.brp_web_stats_players_online.findFirst({
-      select: {
-        players_online: true,
+    const max = await prisma.brp_web_stats_players_online.findFirst({
+      where: {
+        timestamp: {
+          gte: yesterday,
+        },
       },
       orderBy: {
-        timestamp: "desc",
+        players_online: "desc",
       },
     });
 
     return Response.json({
-      today: today?.players_online,
+      today: max?.players_online,
       players: players,
     });
   }

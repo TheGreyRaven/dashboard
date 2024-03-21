@@ -42,7 +42,7 @@ const PlayersOnline = () => {
     error: any;
     isLoading: boolean;
   } = useSWR("/api/fivem/players-online?live=true", fetcher, {
-    refreshInterval: 120,
+    refreshInterval: 2500,
   });
 
   if (error) {

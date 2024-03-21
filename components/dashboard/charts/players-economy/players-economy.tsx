@@ -1,7 +1,5 @@
 "use client";
-
 import Image from "next/image";
-import { useMediaPredicate } from "react-media-hook";
 import {
   CartesianGrid,
   Line,
@@ -15,37 +13,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload?.length) {
-    return (
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm px-4 py-2">
-        {payload.map((ele: any, index: any) => (
-          <span className="text-sm" key={index}>
-            Economy:{" "}
-            {new Intl.NumberFormat("sv-SE", {
-              style: "currency",
-              currency: "SEK",
-              notation: "standard",
-            }).format(ele.value)}
-          </span>
-        ))}
-        <br />
-        <span className="text-xs">Time: {label}</span>
-      </div>
-    );
-  }
-  return null;
-};
-
-const ServerGraph = ({ data }: { data: any }) => {
-  const isMobile = useMediaPredicate("(max-width: 400px)");
-
+const PlayerEconomyClient = ({ data }: { data: any }) => {
+  console.log(data);
   return (
     <ScrollArea className="h-full">
-      <div className="flex-1 space-y-4 pt-6">
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <div className="flex items-baseline">
           <h2 className="text-3xl font-bold tracking-tight">
-            Server Economy Graph
+            Players Economy Graph
           </h2>
           <Image
             src="/emoji/Money-Bag.png"
@@ -66,22 +41,23 @@ const ServerGraph = ({ data }: { data: any }) => {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart width={500} height={300} data={data}>
                   <CartesianGrid className="opacity-25" />
-                  <XAxis dataKey="time" />
-                  <YAxis
-                    dataKey="total_economy"
-                    tickFormatter={(value) => {
-                      return new Intl.NumberFormat("sv-SE", {
-                        notation: "compact",
-                      })
-                        .format(value)
-                        .toString();
+                  <XAxis
+                    dataKey="timestamp"
+                    tickFormatter={(value: string) => {
+                      const date = new Date(value);
+                      return `${date.getHours()}:${date.getMinutes()}`;
                     }}
                   />
-                  <Tooltip
-                    content={
-                      <CustomTooltip active={false} payload={[]} label={""} />
-                    }
+                  <YAxis dataKey="total_economy" />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="total_economy"
+                    stroke="#ea580c"
+                    strokeWidth={2}
+                    activeDot={{ r: 8 }}
                   />
+
                   <Line
                     type="monotone"
                     dataKey="total_economy"
@@ -99,4 +75,4 @@ const ServerGraph = ({ data }: { data: any }) => {
   );
 };
 
-export { ServerGraph };
+export { PlayerEconomyClient };
