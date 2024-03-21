@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useMediaPredicate } from "react-media-hook";
 import {
   CartesianGrid,
   Line,
@@ -38,8 +37,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 const ServerGraph = ({ data }: { data: any }) => {
-  const isMobile = useMediaPredicate("(max-width: 400px)");
-
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 pt-6">
