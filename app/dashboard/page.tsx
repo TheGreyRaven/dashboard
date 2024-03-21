@@ -101,7 +101,7 @@ const Home = async () => {
                 {online.players.length}/90
               </div>
               <p className="text-xs text-muted-foreground">
-                Max today:{" "}
+                Max last 24h:{" "}
                 {online.players.length > online.today
                   ? online.players.length
                   : online.today}
