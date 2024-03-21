@@ -149,7 +149,7 @@ const Home = async () => {
               <CardTitle className="text-sm font-medium">
                 System Status
               </CardTitle>
-              <IconCircleFilled className={`h-4 w-4 ${color}`} />
+              <IconCircleFilled className={`animate-pulse h-4 w-4 ${color}`} />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{services}</div>
