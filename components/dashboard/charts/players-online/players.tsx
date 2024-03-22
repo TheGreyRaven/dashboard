@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import moment from "moment";
 import {
   Bar,
   BarChart,
@@ -20,60 +20,53 @@ interface PlayerData {
   timestamp: string;
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload?.length) {
-    return (
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm px-4 py-2">
-        {payload.map((ele: any, index: any) => (
-          <span className="text-sm" key={index}>
-            Online: {ele.value}
-          </span>
-        ))}
-        <br />
-        <span className="text-xs">Time: {label}</span>
-      </div>
-    );
-  }
-  return null;
-};
-
 const PlayerList = () => {
-  const [playerArray, setPlayerArray] = useState<PlayerData[]>([]);
   const { data: players }: { data: PlayerData[] } = useSWR(
     "/api/fivem/players-online",
     fetcher,
     { refreshInterval: 1000 }
   );
 
-  useEffect(() => {
-    const playerArray: { players_online: number; timestamp: string }[] = [];
-    // @ts-expect-error
-    const sorted = players?.sort((x, y) => {
-      return new Date(x.timestamp) < new Date(y.timestamp);
-    });
-
-    sorted?.map((player: PlayerData) => {
-      const date = new Date(player.timestamp).getHours().toLocaleString();
-
-      playerArray.push({
-        players_online: player.players_online,
-        timestamp: String(date).concat(":00"),
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload?.length) {
+      const found = players.filter((value: any) => {
+        return value.id === label;
       });
-    });
 
-    setPlayerArray(playerArray);
-  }, [players]);
+      return (
+        <div className="rounded-lg border bg-card text-card-foreground shadow-sm px-4 py-2">
+          {payload.map((ele: any, index: any) => (
+            <span className="text-sm" key={index}>
+              Online: {ele.value}
+            </span>
+          ))}
+          <br />
+          <span className="text-xs">
+            Time: {moment(found[0].timestamp).utc().format("YYYY-MM-DD HH:mm")}
+          </span>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={playerArray}>
+      <BarChart data={players}>
         <CartesianGrid className="opacity-25" />
         <XAxis
-          dataKey="timestamp"
+          dataKey="id"
           stroke="#888888"
           fontSize={12}
           tickLine={false}
           axisLine={false}
+          tickFormatter={(id) => {
+            const found = players.filter((value: any) => {
+              return value.id === id;
+            });
+
+            return moment(found[0].timestamp).utc().format("HH:mm");
+          }}
         />
         <Tooltip
           cursor={{ fillOpacity: 0.1 }}
