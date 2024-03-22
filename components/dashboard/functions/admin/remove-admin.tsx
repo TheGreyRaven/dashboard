@@ -1,5 +1,4 @@
 "use client";
-/** @type {import('tailwindcss').Config} */
 
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";

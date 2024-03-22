@@ -1,6 +1,5 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import useSWR from "swr";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
