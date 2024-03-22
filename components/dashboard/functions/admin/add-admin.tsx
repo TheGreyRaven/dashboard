@@ -7,6 +7,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -38,6 +39,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IconAlertTriangle } from "@tabler/icons-react";
 
 const formSchema = z.object({
   discord_id: z.string().min(17, {
@@ -135,8 +137,16 @@ const AddAdmin = () => {
               <DialogHeader>
                 <DialogTitle>Add new admin</DialogTitle>
                 <DialogDescription>
-                  Make sure you have the right Discord ID when adding a new
-                  admin!
+                  <Alert className="border-red-600 mt-4">
+                    <IconAlertTriangle className="h-4 w-4" color="red" />
+                    <AlertTitle className="text-sm">Heads up!</AlertTitle>
+                    <AlertDescription>
+                      <p className="text-xs">
+                        Make sure you have the right Discord ID when adding a
+                        new admin!
+                      </p>
+                    </AlertDescription>
+                  </Alert>
                 </DialogDescription>
               </DialogHeader>
 

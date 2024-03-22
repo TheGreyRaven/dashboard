@@ -1,4 +1,5 @@
 "use client";
+/** @type {import('tailwindcss').Config} */
 
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -6,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,7 +30,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { IconX } from "@tabler/icons-react";
+import { IconAlertTriangle, IconX } from "@tabler/icons-react";
 
 const RemoveAdmin = ({ admin }: { admin: any }) => {
   const router = useRouter();
@@ -107,59 +109,63 @@ const RemoveAdmin = ({ admin }: { admin: any }) => {
               <DialogHeader>
                 <DialogTitle>Are you sure?</DialogTitle>
                 <DialogDescription>
-                  This action can not be undone and will delete the following
-                  admin
+                  <Alert className="border-red-600 mt-4">
+                    <IconAlertTriangle className="h-4 w-4" color="#721718" />
+                    <AlertTitle className="text-sm">Warning!</AlertTitle>
+                    <AlertDescription>
+                      <p className="text-xs">
+                        This action can not be undone and will delete the
+                        following admin
+                      </p>
+                    </AlertDescription>
+                  </Alert>
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <FormField
-                  control={form.control}
-                  name="discord_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Discord Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled
-                          {...field}
-                          value={
-                            admin.discord_name === ""
-                              ? "N/A"
-                              : admin.discord_name
-                          }
-                          className="disabled:opacity-100"
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        This is the Discord name of the admin
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="discord_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Discord Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled
+                        {...field}
+                        value={
+                          admin.discord_name === "" ? "N/A" : admin.discord_name
+                        }
+                        className="disabled:opacity-100"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      This is the Discord name of the admin
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="discord_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Discord ID</FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled
-                          {...field}
-                          value={admin.discord_id}
-                          className="disabled:opacity-100"
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        This is the Discord ID of the user you want to add
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="discord_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Discord ID</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled
+                        {...field}
+                        value={admin.discord_id}
+                        className="disabled:opacity-100"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      This is the Discord ID of the user you want to add
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <DialogFooter className="mt-4">
                 <DialogClose asChild>
                   <Button variant="outline">Cancel</Button>

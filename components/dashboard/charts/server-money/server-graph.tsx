@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -59,12 +59,24 @@ const ServerGraph = ({ data }: { data: any }) => {
             <CardHeader>
               <CardTitle>Last 24 hours</CardTitle>
             </CardHeader>
-            <CardContent className="h-[350px]">
+            <CardContent className="h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart width={500} height={300} data={data}>
+                <BarChart data={data}>
                   <CartesianGrid className="opacity-25" />
-                  <XAxis dataKey="time" />
+                  <XAxis
+                    dataKey="time"
+                    stroke="#888888"
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip
+                    cursor={{ fillOpacity: 0.1 }}
+                    content={
+                      <CustomTooltip active={false} payload={[]} label={""} />
+                    }
+                  />
                   <YAxis
+                    width={60}
                     dataKey="total_economy"
                     tickFormatter={(value) => {
                       return new Intl.NumberFormat("sv-SE", {
@@ -73,20 +85,16 @@ const ServerGraph = ({ data }: { data: any }) => {
                         .format(value)
                         .toString();
                     }}
+                    stroke="#888888"
+                    tickLine={false}
+                    axisLine={false}
                   />
-                  <Tooltip
-                    content={
-                      <CustomTooltip active={false} payload={[]} label={""} />
-                    }
-                  />
-                  <Line
-                    type="monotone"
+                  <Bar
                     dataKey="total_economy"
-                    stroke="#ea580c"
-                    strokeWidth={2}
-                    activeDot={{ r: 8 }}
+                    fill="#ea580c"
+                    radius={[4, 4, 0, 0]}
                   />
-                </LineChart>
+                </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>

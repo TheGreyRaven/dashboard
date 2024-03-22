@@ -21,8 +21,6 @@ const getServerEconomy = async () => {
 const GraphPage = async () => {
   const { success, error, data } = await getServerEconomy();
 
-  //console.log(data);
-
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <Tabs defaultValue="server" className="w-full">
