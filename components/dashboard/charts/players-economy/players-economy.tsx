@@ -78,7 +78,8 @@ const formatYAxis = (economy: number) => {
 };
 
 /**
- * TODO: The timestamp is wrong which results in duplicates and thus rendering wrong data on hover
+ * TODO: The timestamp is wrong which results in duplicates and thus rendering wrong data on hover, something with duplicate category something
+ * https://stackoverflow.com/questions/57359903/recharts-tooltip-displays-same-value
  */
 
 const PlayerEconomyClient = ({ data }: { data: any }) => {

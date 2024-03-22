@@ -37,7 +37,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const PlayerCharts = () => {
+const PlayerList = () => {
   const [playerArray, setPlayerArray] = useState<PlayerData[]>([]);
   const { data: players }: { data: PlayerData[] } = useSWR(
     "/api/fivem/players-online",
@@ -93,4 +93,4 @@ const PlayerCharts = () => {
   );
 };
 
-export { PlayerCharts };
+export { PlayerList };

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { PlayerCharts } from "@/components/dashboard/charts/players-online/players";
+import { PlayerList } from "@/components/dashboard/charts/players-online/players";
 import { PlayersOnline } from "@/components/dashboard/stats/players-online";
 import { ServerEconomy } from "@/components/dashboard/stats/server-economy";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -157,7 +157,7 @@ const Home = async () => {
               <CardTitle>Overview</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
-              <PlayerCharts />
+              <PlayerList />
             </CardContent>
           </Card>
           <PlayersOnline />

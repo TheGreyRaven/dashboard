@@ -5,7 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { IconCar, IconHome, IconUser, IconUsers } from "@tabler/icons-react";
 
+const getStats = async () => {
+  const data = await fetch(`${process.env.LOCAL_URL}/api/graphs/players`);
+  const result = await data.json();
+  return result;
+};
+
 const Players = async () => {
+  const { players, characters, vehicles, houses } = await getStats();
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 w-svw lg:w-full">
@@ -28,10 +35,8 @@ const Players = async () => {
               <IconUsers className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">1202</div>
-              <p className="text-xs text-muted-foreground">
-                +4 since yesterday
-              </p>
+              <div className="text-2xl font-bold">{characters}</div>
+              <p className="text-xs text-muted-foreground">Placeholder</p>
             </CardContent>
           </Card>
           <Card>
@@ -42,10 +47,8 @@ const Players = async () => {
               <IconUser className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">700</div>
-              <p className="text-xs text-muted-foreground">
-                +12 from yesterday
-              </p>
+              <div className="text-2xl font-bold">{players}</div>
+              <p className="text-xs text-muted-foreground">Placeholder</p>
             </CardContent>
           </Card>
           <Card>
@@ -56,8 +59,8 @@ const Players = async () => {
               <IconCar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">121</div>
-              <p className="text-xs text-muted-foreground">+4 from yesterday</p>
+              <div className="text-2xl font-bold">{vehicles}</div>
+              <p className="text-xs text-muted-foreground">Placeholder</p>
             </CardContent>
           </Card>
           <Card>
@@ -68,10 +71,8 @@ const Players = async () => {
               <IconHome className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">2</div>
-              <p className="text-xs text-muted-foreground">
-                No increase since yesterday
-              </p>
+              <div className="text-2xl font-bold">{houses}</div>
+              <p className="text-xs text-muted-foreground">Placeholder</p>
             </CardContent>
           </Card>
         </div>
