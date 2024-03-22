@@ -63,6 +63,7 @@ const PlayerCharts = () => {
 
     setPlayerArray(playerArray);
   }, [players]);
+
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={playerArray}>
@@ -79,6 +80,7 @@ const PlayerCharts = () => {
           content={<CustomTooltip active={false} payload={[]} label={""} />}
         />
         <YAxis
+          width={35}
           stroke="#888888"
           fontSize={12}
           tickLine={false}

@@ -1,4 +1,4 @@
-//import { PlayersEconomy } from "@/components/dashboard/charts/players-economy/server-component";
+import { PlayersEconomy } from "@/components/dashboard/charts/players-economy/server-component";
 import { ServerGraph } from "@/components/dashboard/charts/server-money/server-graph";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -36,7 +36,9 @@ const GraphPage = async () => {
         <TabsContent value="server">
           <ServerGraph data={data} />
         </TabsContent>
-        <TabsContent value="players"></TabsContent>
+        <TabsContent value="players">
+          <PlayersEconomy />
+        </TabsContent>
         <TabsContent value="discord"></TabsContent>
         <TabsContent value="logs"></TabsContent>
         <TabsContent value="tebex"></TabsContent>
