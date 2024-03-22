@@ -43,7 +43,6 @@ const GraphPage = async () => {
       </Tabs>
     </div>
   );
-  //return <PlayersEconomy />;
 };
 
 export default GraphPage;
