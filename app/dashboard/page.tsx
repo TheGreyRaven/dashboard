@@ -6,12 +6,7 @@ import { ServerEconomy } from "@/components/dashboard/stats/server-economy";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchDashboardData } from "@/lib/fetch";
-import {
-  IconBrandDiscord,
-  IconCash,
-  IconCircleFilled,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconBrandDiscord, IconCash, IconUsers } from "@tabler/icons-react";
 
 const getData = async () => {
   const dashboardData = await fetchDashboardData();
@@ -43,28 +38,28 @@ const setHealth = (_system: any) => {
       return {
         services: "Outage",
         status: "2 services are offline",
-        color: "text-red-700",
+        color: "bg-red-700",
       };
 
     case 2:
       return {
         services: "Outage",
         status: "1 service is offline",
-        color: "text-yellow-700",
+        color: "bg-yellow-700",
       };
 
     case 3:
       return {
         services: "Online",
         status: "All services online",
-        color: "text-green-500",
+        color: "bg-green-500",
       };
 
     default:
       return {
         services: "Offline",
         status: "All services offline",
-        color: "text-red-700",
+        color: "bg-red-700",
       };
   }
 };
@@ -143,7 +138,14 @@ const Home = async () => {
               <CardTitle className="text-sm font-medium">
                 System Status
               </CardTitle>
-              <IconCircleFilled className={`animate-pulse h-4 w-4 ${color}`} />
+              <span className="relative flex h-3 w-3">
+                <span
+                  className={`animate-ping absolute inline-flex h-full w-full rounded-full ${color} opacity-75`}
+                ></span>
+                <span
+                  className={`relative inline-flex rounded-full h-3 w-3 ${color}`}
+                ></span>
+              </span>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{services}</div>
