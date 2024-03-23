@@ -42,7 +42,7 @@ const PlayerList = () => {
           ))}
           <br />
           <span className="text-xs">
-            Time: {moment(found[0].timestamp).utc().format("YYYY-MM-DD HH:mm")}
+            Time: {moment(found[0]?.timestamp).utc().format("YYYY-MM-DD HH:mm")}
           </span>
         </div>
       );
@@ -65,7 +65,7 @@ const PlayerList = () => {
               return value.id === id;
             });
 
-            return moment(found[0].timestamp).utc().format("HH:mm");
+            return moment(found[0]?.timestamp).utc().format("HH:mm");
           }}
         />
         <Tooltip
