@@ -88,7 +88,17 @@ const PlayersTable = () => {
   const columns: ColumnDef<IPlayer>[] = [
     {
       accessorKey: "online",
-      header: "Online",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Online
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
       cell: ({ row }) => {
         const online = row.getValue("online");
         const styling = online ? "bg-green-500" : "animate-none bg-red-700";
