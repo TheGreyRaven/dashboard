@@ -11,7 +11,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -43,6 +42,8 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 
+import { ViewPlayer } from "./view-player";
+
 type IPlayer = {
   id: number;
   cid: number;
@@ -52,118 +53,6 @@ type IPlayer = {
   last_updated: string;
   online: boolean;
 };
-
-const columns: ColumnDef<IPlayer>[] = [
-  {
-    accessorKey: "online",
-    header: "Online",
-    cell: ({ row }) => {
-      const online = row.getValue("online");
-      const styling = online ? "bg-green-500" : "animate-none bg-red-700";
-      return (
-        <span className="relative flex h-3 w-3">
-          <span
-            className={`animate-ping ${styling} absolute inline-flex h-full w-full rounded-full opacity-75`}
-          ></span>
-          <span
-            className={`relative inline-flex rounded-full h-3 w-3 ${styling}`}
-          ></span>
-        </span>
-      );
-    },
-  },
-  {
-    accessorKey: "cid",
-    header: "Character ID",
-    cell: ({ row }) => <div>{row.getValue("cid")}</div>,
-  },
-  {
-    accessorKey: "charinfo",
-    header: "Character Name",
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("charinfo")}</div>
-    ),
-  },
-  {
-    accessorKey: "money",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Money
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="font-medium">
-        {new Intl.NumberFormat("sv-SE", {
-          style: "currency",
-          currency: "SEK",
-          notation: "standard",
-        }).format(row.getValue("money"))}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "license",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          License
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("license")}</div>
-    ),
-  },
-  {
-    accessorKey: "last_updated",
-    header: "Updated",
-    cell: ({ row }) => (
-      <div className="font-medium">
-        {moment(row.getValue("last_updated"))
-          .utc()
-          .format("YYYY-MM-DD HH:mm:ss")}
-      </div>
-    ),
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const player = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(player.license)}
-            >
-              Copy license
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View player</DropdownMenuItem>
-            <DropdownMenuItem disabled>Start livestream</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
 
 const AlertBanner = () => {
   return (
@@ -192,6 +81,129 @@ const PlayersTable = () => {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [searchType, setSearchType] = useState("charinfo");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedLicense, setSelectedLicense] = useState("");
+  const [selectedId, setSelectedId] = useState(0);
+
+  const columns: ColumnDef<IPlayer>[] = [
+    {
+      accessorKey: "online",
+      header: "Online",
+      cell: ({ row }) => {
+        const online = row.getValue("online");
+        const styling = online ? "bg-green-500" : "animate-none bg-red-700";
+        return (
+          <span className="relative flex h-3 w-3">
+            <span
+              className={`animate-ping ${styling} absolute inline-flex h-full w-full rounded-full opacity-75`}
+            ></span>
+            <span
+              className={`relative inline-flex rounded-full h-3 w-3 ${styling}`}
+            ></span>
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "cid",
+      header: "Character ID",
+      cell: ({ row }) => <div>{row.getValue("cid")}</div>,
+    },
+    {
+      accessorKey: "charinfo",
+      header: "Character Name",
+      cell: ({ row }) => (
+        <div className="font-medium">{row.getValue("charinfo")}</div>
+      ),
+    },
+    {
+      accessorKey: "money",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Money
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="font-medium">
+          {new Intl.NumberFormat("sv-SE", {
+            style: "currency",
+            currency: "SEK",
+            notation: "standard",
+          }).format(row.getValue("money"))}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "license",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            License
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="lowercase">{row.getValue("license")}</div>
+      ),
+    },
+    {
+      accessorKey: "last_updated",
+      header: "Updated",
+      cell: ({ row }) => (
+        <div className="font-medium">
+          {moment(row.getValue("last_updated"))
+            .utc()
+            .format("YYYY-MM-DD HH:mm:ss")}
+        </div>
+      ),
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const player = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(player.license)}
+              >
+                Copy license
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedId(player.cid);
+                  setSelectedLicense(player.license);
+                  setDialogOpen(true);
+                }}
+              >
+                View player
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled>Start livestream</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
 
   const table = useReactTable({
     data,
@@ -242,6 +254,12 @@ const PlayersTable = () => {
 
   return (
     <div className="w-full">
+      <ViewPlayer
+        license={selectedLicense}
+        cid={selectedId}
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+      />
       <AlertBanner />
       <div className="flex justify-between py-4">
         <Input
