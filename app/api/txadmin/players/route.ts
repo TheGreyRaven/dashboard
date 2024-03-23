@@ -8,6 +8,8 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
 
     const actions = await rawActions.json();
 
+    console.log(actions);
+
     if (actions?.message) {
       return Response.json(
         {
