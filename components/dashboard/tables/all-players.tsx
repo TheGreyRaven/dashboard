@@ -282,7 +282,7 @@ const PlayersTable = () => {
           onChange={(event) =>
             table.getColumn(searchType)?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm ml-4"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
