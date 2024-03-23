@@ -1,3 +1,4 @@
+import moment from "moment";
 import Image from "next/image";
 
 import { AddAdmin } from "@/components/dashboard/functions/admin/add-admin";
@@ -84,7 +85,9 @@ const DashboardAdmins = ({ admins }: { admins: any }) => {
                       <Badge>{admin.added_by_name ?? "SYSTEM"}</Badge>
                     </TableCell>
                     <TableCell>
-                      {new Date(admin.added_timestamp).toLocaleString("sv-SE")}
+                      {moment(admin.added_timestamp)
+                        .utc()
+                        .format("YYYY-MM-DD HH:mm:ss")}
                     </TableCell>
                     <TableCell>
                       <RemoveAdmin admin={admin} />
