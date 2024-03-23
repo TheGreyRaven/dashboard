@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const GET = async (_req: NextRequest, _res: NextResponse) => {
-  console.log(process.env.TX_API);
   try {
     const rawActions = await fetch(`${process.env.TX_API}/players`, {
       cache: "no-cache",
