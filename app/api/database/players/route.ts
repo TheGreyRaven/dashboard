@@ -27,6 +27,7 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
         name: true,
         charinfo: true,
         last_updated: true,
+        money: true,
       },
     });
 
@@ -37,6 +38,12 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
       players[index].online = false;
 
       players[index].charinfo = `${charInfo.firstname} ${charInfo.lastname}`;
+
+      const money = players[index].money;
+      const { cash, bank, crypto } = JSON.parse(money);
+
+      // @ts-ignore
+      players[index].money = Number(bank + cash + crypto);
 
       if (isPlayerOnline(onlinePlayers, player.license)) {
         // @ts-ignore

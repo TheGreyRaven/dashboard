@@ -85,6 +85,29 @@ const columns: ColumnDef<IPlayer>[] = [
     ),
   },
   {
+    accessorKey: "money",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Money
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="font-medium">
+        {new Intl.NumberFormat("sv-SE", {
+          style: "currency",
+          currency: "SEK",
+          notation: "standard",
+        }).format(row.getValue("money"))}
+      </div>
+    ),
+  },
+  {
     accessorKey: "license",
     header: ({ column }) => {
       return (
@@ -127,7 +150,6 @@ const columns: ColumnDef<IPlayer>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(player.license)}
             >
@@ -150,9 +172,10 @@ const AlertBanner = () => {
       <AlertTitle>Heads up!</AlertTitle>
       <AlertDescription>
         The online indicator does <span className="font-bold">not</span>{" "}
-        represent that the character is online, just the player and also this
-        does not update at regular intervals due to large data being fetch on
-        page load.
+        represent that the character is online, it{" "}
+        <span className="font-bold">only</span> indicates that owner of the
+        character is online and also this does not update at regular intervals
+        due to large data being fetched.
       </AlertDescription>
     </Alert>
   );
