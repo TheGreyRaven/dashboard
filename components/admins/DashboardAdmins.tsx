@@ -58,7 +58,6 @@ const DashboardAdmins = ({ admins }: { admins: any }) => {
                   <TableHead>Email</TableHead>
                   <TableHead>ID</TableHead>
                   <TableHead className="min-w-[150px]">Added By Name</TableHead>
-                  <TableHead className="min-w-[150px]">Added By ID</TableHead>
                   <TableHead className="min-w-[200px]">Added Date</TableHead>
                   <TableHead className="text-right">Action</TableHead>
                 </TableRow>
@@ -83,9 +82,6 @@ const DashboardAdmins = ({ admins }: { admins: any }) => {
                     <TableCell>{admin.discord_id}</TableCell>
                     <TableCell>
                       <Badge>{admin.added_by_name ?? "SYSTEM"}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge>{admin.added_by_id ?? "SYSTEM"}</Badge>
                     </TableCell>
                     <TableCell>
                       {new Date(admin.added_timestamp).toLocaleString("sv-SE")}
