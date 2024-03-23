@@ -78,6 +78,8 @@ const ServerGraph = ({ data }: { data: any }) => {
                   <YAxis
                     width={60}
                     dataKey="total_economy"
+                    type="number"
+                    domain={[0, "dataMax + 3000000"]}
                     tickFormatter={(value) => {
                       return new Intl.NumberFormat("sv-SE", {
                         notation: "compact",
