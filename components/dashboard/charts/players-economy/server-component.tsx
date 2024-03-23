@@ -2,7 +2,10 @@ import { PlayerEconomyClient } from "./players-economy";
 
 const getPlayersEconomy = async () => {
   const raw = await fetch(
-    `${process.env.LOCAL_URL}/api/graphs/players-economy`
+    `${process.env.LOCAL_URL}/api/graphs/players-economy`,
+    {
+      cache: "no-cache",
+    }
   );
   const { success, error, data } = await raw.json();
 
