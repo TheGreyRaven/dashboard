@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
   const url = new URL(_req.url);
@@ -32,7 +33,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
             },
           });
         } catch (err) {
-          console.error(err);
+          Sentry.captureException(err);
         }
       }
 
@@ -47,7 +48,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
       permission_level: null,
     });
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
     return Response.json({
       success: false,
       permission_level: null,

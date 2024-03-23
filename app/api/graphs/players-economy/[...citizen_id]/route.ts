@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 
 const GET = async (
   _req: NextRequest,
@@ -38,7 +39,7 @@ const GET = async (
       status: 200,
     });
   } catch (err: any) {
-    console.error(err);
+    Sentry.captureException(err);
     return Response.json(
       {
         message: "Failed to fetch citizen data",

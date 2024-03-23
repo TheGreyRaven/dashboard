@@ -1,3 +1,5 @@
+import * as Sentry from "@sentry/nextjs";
+
 const fetchDashboardData = async () => {
   /**
    * TODO: This should probably be split up in order to prevent everything failing if once of the services does not respond.
@@ -23,7 +25,7 @@ const fetchDashboardData = async () => {
       health: await system.json(),
     };
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
 
     return {
       online: {

@@ -14,9 +14,8 @@ import {
 import { FullSkeleton } from "@/components/ui/full-skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { fetcher } from "@/lib/utils";
-import { LiveServerObject, PlayerObject } from "@/types";
+import { LiveServerObject } from "@/types";
 import { IconAlertTriangle, IconCircleFilled } from "@tabler/icons-react";
 
 const pingThreshold = (ping: number) => {
@@ -45,7 +44,6 @@ const PlayersOnline = () => {
   });
 
   if (error) {
-    console.error(error);
     return (
       <Card className="col-span-4 md:col-span-3">
         <CardHeader>

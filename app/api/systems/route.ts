@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 
 const GET = async (_req: NextRequest, _res: NextResponse) => {
   const HealthCheck = {
@@ -13,7 +14,7 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
     await prisma.$connect();
     HealthCheck.database = true;
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
   } finally {
     await prisma.$disconnect();
   }
@@ -24,7 +25,7 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
       HealthCheck.fivem = true;
     }
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
   }
 
   return Response.json(HealthCheck, {

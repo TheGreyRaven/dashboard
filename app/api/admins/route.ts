@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 
 const DELETE = async (_req: NextRequest, _res: NextResponse) => {
   const { discord_id } = await _req.json();
@@ -34,7 +35,7 @@ const DELETE = async (_req: NextRequest, _res: NextResponse) => {
       }
     );
   } catch (err: any) {
-    console.error(err);
+    Sentry.captureException(err);
     return Response.json(
       {
         success: false,
@@ -59,7 +60,7 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
       admins: admins,
     });
   } catch (err: any) {
-    console.error(err);
+    Sentry.captureException(err);
     return Response.json(
       {
         success: false,
@@ -99,7 +100,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
       }
     );
   } catch (err: any) {
-    console.error(err);
+    Sentry.captureException(err);
     return Response.json(
       {
         success: false,

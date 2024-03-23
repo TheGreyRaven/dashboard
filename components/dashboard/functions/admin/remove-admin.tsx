@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import * as Sentry from "@sentry/nextjs";
 import { IconAlertTriangle, IconX } from "@tabler/icons-react";
 
 const RemoveAdmin = ({ admin }: { admin: any }) => {
@@ -80,7 +81,7 @@ const RemoveAdmin = ({ admin }: { admin: any }) => {
         setLoading(false);
       }
     } catch (err) {
-      console.error(err);
+      Sentry.captureException(err);
       toast({
         title: "Error",
         description: "Unable to contact API",

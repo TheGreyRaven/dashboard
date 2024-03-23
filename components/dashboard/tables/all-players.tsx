@@ -1,19 +1,24 @@
 "use client";
 
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-import * as React from "react";
+import moment from "moment";
+import { useState } from "react";
+import useSWRImmutable from "swr/immutable";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -22,6 +27,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { fetcher } from "@/lib/utils";
+import * as Sentry from "@sentry/nextjs";
+import { IconAlertTriangle } from "@tabler/icons-react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -35,88 +43,80 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-];
-
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
+type IPlayer = {
+  id: number;
+  cid: number;
+  license: string;
+  name: string;
+  charinfo: string;
+  last_updated: string;
+  online: boolean;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+const columns: ColumnDef<IPlayer>[] = [
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "online",
+    header: "Online",
+    cell: ({ row }) => {
+      const online = row.getValue("online");
+      const styling = online ? "bg-green-500" : "animate-none bg-red-700";
+      return (
+        <span className="relative flex h-3 w-3">
+          <span
+            className={`animate-ping ${styling} absolute inline-flex h-full w-full rounded-full opacity-75`}
+          ></span>
+          <span
+            className={`relative inline-flex rounded-full h-3 w-3 ${styling}`}
+          ></span>
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "cid",
+    header: "Character ID",
+    cell: ({ row }) => <div>{row.getValue("cid")}</div>,
+  },
+  {
+    accessorKey: "charinfo",
+    header: "Character Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="font-medium">{row.getValue("charinfo")}</div>
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "license",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          License
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("license")}</div>
+    ),
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      const formatted = new Intl.NumberFormat("sv-SE", {
-        style: "currency",
-        currency: "SEK",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
+    accessorKey: "last_updated",
+    header: "Updated",
+    cell: ({ row }) => (
+      <div className="font-medium">
+        {moment(row.getValue("last_updated"))
+          .utc()
+          .format("YYYY-MM-DD HH:mm:ss")}
+      </div>
+    ),
   },
   {
     id: "actions",
-    enableHiding: false,
+    header: "Actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const player = row.original;
 
       return (
         <DropdownMenu>
@@ -129,13 +129,13 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(player.license)}
             >
-              Copy payment ID
+              Copy license
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>View player</DropdownMenuItem>
+            <DropdownMenuItem disabled>Start livestream</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -143,14 +143,32 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-const PlayersTable = ({ players }: any) => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+const AlertBanner = () => {
+  return (
+    <Alert className="border-red-600">
+      <IconAlertTriangle className="h-4 w-4" color="red" />
+      <AlertTitle>Heads up!</AlertTitle>
+      <AlertDescription>
+        The online indicator does <span className="font-bold">not</span>{" "}
+        represent that the character is online, just the player and also this
+        does not update at regular intervals due to large data being fetch on
+        page load.
+      </AlertDescription>
+    </Alert>
   );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+};
+
+const PlayersTable = () => {
+  const { data, isLoading, error } = useSWRImmutable(
+    "/api/database/players",
+    fetcher
+  );
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [searchType, setSearchType] = useState("charinfo");
 
   const table = useReactTable({
     data,
@@ -171,41 +189,71 @@ const PlayersTable = ({ players }: any) => {
     },
   });
 
+  if (isLoading) {
+    return (
+      <div className="w-full">
+        <AlertBanner />
+
+        <div className="py-4">
+          <Skeleton className="h-[600px] w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    Sentry.captureException(error);
+
+    return (
+      <div className="w-full h-[400px] flex justify-center items-center">
+        <Alert className="border-red-600 max-w-lg">
+          <IconAlertTriangle className="h-4 w-4" color="red" />
+          <AlertTitle>Error!</AlertTitle>
+          <AlertDescription>
+            Failed to fetch players, please try again later.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <AlertBanner />
+      <div className="flex justify-between py-4">
         <Input
-          placeholder="Search player"
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+          placeholder={`Search by ${
+            searchType === "charinfo" ? "name" : searchType
+          }`}
+          value={
+            (table.getColumn(searchType)?.getFilterValue() as string) ?? ""
           }
-          className="max-w-sm mr-4"
+          onChange={(event) =>
+            table.getColumn(searchType)?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              Search by <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
+            <DropdownMenuRadioGroup
+              value={searchType}
+              onValueChange={(val) => {
+                table.resetColumnFilters(true);
+                setSearchType(val);
+              }}
+            >
+              <DropdownMenuRadioItem value="charinfo">
+                Name
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="license">
+                License
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -261,7 +309,7 @@ const PlayersTable = ({ players }: any) => {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          700 characters exists.
+          {data.length} characters exists.
         </div>
         <div className="space-x-2">
           <Button

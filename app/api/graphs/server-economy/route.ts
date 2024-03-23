@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
-
-interface GraphMoney {
-  timestamp: Date;
-  total_economy: number;
-}
+import * as Sentry from "@sentry/nextjs";
 
 const GET = async (_req: NextRequest, _res: NextResponse) => {
   try {
@@ -24,7 +20,7 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
       data: data,
     });
   } catch (err: any) {
-    console.error(err);
+    Sentry.captureException(err);
     return Response.json({
       success: false,
       error: err.message,

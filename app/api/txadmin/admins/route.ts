@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import * as Sentry from "@sentry/nextjs";
+
 const GET = async (_req: NextRequest, _res: NextResponse) => {
   try {
     const rawActions = await fetch(`${process.env.TX_API}/admins`, {
@@ -21,7 +23,7 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
 
     return Response.json(actions);
   } catch (err: any) {
-    console.log(err);
+    Sentry.captureException(err);
     return Response.json(
       {
         message: "Failed to fetch admins",

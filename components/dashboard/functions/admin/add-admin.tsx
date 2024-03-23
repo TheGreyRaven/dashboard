@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import * as Sentry from "@sentry/nextjs";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 const formSchema = z.object({
@@ -112,7 +113,7 @@ const AddAdmin = () => {
         });
       }
     } catch (err) {
-      console.error(err);
+      Sentry.captureException(err);
       toast({
         title: "Error",
         description: "Unable to contact API",

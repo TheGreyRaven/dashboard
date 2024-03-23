@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 
 interface CharMoney {
   bank: number;
@@ -66,7 +67,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
       }
     );
   } catch (err: any) {
-    console.error(err);
+    Sentry.captureException(err);
     return Response.json(
       {
         success: false,

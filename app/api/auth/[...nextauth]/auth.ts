@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 
+import * as Sentry from "@sentry/nextjs";
+
 export const {
   handlers: { GET, POST },
   auth,
@@ -47,7 +49,7 @@ export const {
 
           return success ? success : "/?error=not-admin";
         } catch (err) {
-          console.error(err);
+          Sentry.captureException(err);
           return "/?error=failed";
         }
       }

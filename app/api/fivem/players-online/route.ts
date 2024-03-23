@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
   const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`);
@@ -14,7 +15,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
       },
     });
   } catch (err: any) {
-    console.error(err);
+    Sentry.captureException(err);
     return Response.json({
       success: false,
       error: err.message,

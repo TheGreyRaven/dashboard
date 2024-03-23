@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 
 interface MoneyInterface {
   bank: number;
@@ -50,6 +51,7 @@ const getServerTotal = async () => {
       percentage: percentageChange(total_economy, serverEconomy),
     };
   } catch (err: any) {
+    Sentry.captureException(err);
     return {
       success: false,
       error: err.message,

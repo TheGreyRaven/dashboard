@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 
 const REVALIDATE_TIME = process.env.NODE_ENV === "production" ? 60 : 0;
 
@@ -21,6 +22,7 @@ const fetchMembers = async () => {
 
     return members;
   } catch (err) {
+    Sentry.captureException(err);
     return err;
   }
 };
@@ -52,6 +54,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
       success: true,
     });
   } catch (err: any) {
+    Sentry.captureException(err);
     return Response.json({
       members: 0,
       success: false,
@@ -93,6 +96,7 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
       },
     });
   } catch (err: any) {
+    Sentry.captureException(err);
     return Response.json({
       success: false,
       error: err.message,

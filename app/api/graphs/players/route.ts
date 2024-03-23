@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import * as Sentry from "@sentry/nextjs";
 
 const GET = async (_req: NextRequest, _res: NextResponse) => {
   try {
@@ -24,7 +25,7 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
       houses: houses,
     });
   } catch (err: any) {
-    console.error(err);
+    Sentry.captureException(err);
     return Response.json(
       {
         error: "Failed to fetch data",

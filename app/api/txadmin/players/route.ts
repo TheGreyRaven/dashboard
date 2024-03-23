@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import * as Sentry from "@sentry/nextjs";
+
 const GET = async (_req: NextRequest, _res: NextResponse) => {
   try {
     const rawActions = await fetch(`${process.env.TX_API}/players`, {
