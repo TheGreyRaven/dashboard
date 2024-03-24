@@ -8,6 +8,7 @@ import { UserNav } from "./user-nav";
 
 const fetchAuthToken = async (username: string) => {
   const raw = await fetch(`${process.env.LOCAL_URL}/api/auth/chat/`, {
+    cache: "no-cache",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
