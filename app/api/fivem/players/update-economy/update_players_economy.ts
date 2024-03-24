@@ -20,7 +20,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
     const updateData: {
       license: string;
       citizen_id: string;
-      character_id: number | null;
+      character_id: number;
       character_name: string;
       total_economy: number;
     }[] = [];
@@ -47,7 +47,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
       updateData.push({
         license: license,
         citizen_id: citizenid,
-        character_id: cid,
+        character_id: cid!,
         character_name: playerName,
         total_economy: economy,
       });
