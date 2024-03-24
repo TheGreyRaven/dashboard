@@ -2,15 +2,14 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { ChatProvider } from "@/components/chat-dialog/chat-provider";
 import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
-import * as Sentry from "@sentry/nextjs";
 
 import { MobileSidebar } from "./mobile-sidebar";
 import { UserNav } from "./user-nav";
 
 const Header = async () => {
   const session = await auth();
-  //@ts-expect-error
-  const hasToken = session.user.chat.token ?? false;
+  // //@ts-expect-error
+  // const hasToken = session.user.chat.token ?? false;
 
   return (
     <div className="fixed top-0 left-0 right-0 supports-backdrop-blur:bg-background/60 border-b bg-background/95 backdrop-blur z-20">
@@ -23,7 +22,7 @@ const Header = async () => {
         </div>
 
         <div className="flex items-center gap-2">
-          {hasToken && (
+          {/* {hasToken && (
             <ChatProvider
               //@ts-expect-error
               apiKey={session?.user?.chat?.key}
@@ -36,7 +35,7 @@ const Header = async () => {
               //@ts-expect-error
               token={session?.user?.chat?.token}
             />
-          )}
+          )} */}
           <UserNav />
           <ThemeToggle />
         </div>
