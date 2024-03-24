@@ -4,6 +4,7 @@ import Discord from "next-auth/providers/discord";
 import * as Sentry from "@sentry/nextjs";
 
 const fetchChatToken = async (username: string) => {
+  console.log(username);
   try {
     const raw = await fetch(`${process.env.LOCAL_URL}/api/auth/chat`, {
       headers: {
@@ -68,14 +69,11 @@ export const {
           );
           const { success, permission_level } = await exists.json();
           // @ts-expect-error
-          const { key, token } = await fetchChatToken(profile.name);
+          const data = await fetchChatToken(profile.username);
 
           if (success && permission_level) {
             profile.permission_level = permission_level;
-            profile.chat = {
-              key: key,
-              token: token,
-            };
+            profile.chat = data;
           }
 
           return success ? success : "/?error=not-admin";
@@ -105,7 +103,10 @@ export const {
           avatar: jwt.profile.avatar,
           email: jwt.profile.email,
           permission_level: jwt.profile.permission_level,
-          chat: jwt.profile.chat,
+          chat: {
+            key: jwt.profile.chat.key,
+            token: jwt.profile.chat.token,
+          },
         };
       }
 
