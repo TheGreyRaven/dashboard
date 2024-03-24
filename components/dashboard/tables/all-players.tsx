@@ -101,7 +101,7 @@ const PlayersTable = () => {
       },
       cell: ({ row }) => {
         const online = row.getValue("online");
-        const styling = online ? "bg-green-500" : "animate-none bg-red-700";
+        const styling = online ? "bg-green-500" : "!animate-none bg-red-700";
         return (
           <span className="relative flex h-3 w-3">
             <span
