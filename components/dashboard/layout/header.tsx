@@ -1,5 +1,4 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
-import { ChatProvider } from "@/components/chat-dialog/chat-provider";
 import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
