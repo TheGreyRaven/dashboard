@@ -43,16 +43,19 @@ const Header = async () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <ChatProvider
-            apiKey={key}
-            user={{
-              id: username,
-              name: username,
-              // @ts-expect-error
-              image: `https://cdn.discordapp.com/avatars/${session?.user?.id}/${session?.user?.avatar}`,
-            }}
-            token={token}
-          />
+          {key && token && (
+            <ChatProvider
+              apiKey={key}
+              user={{
+                id: username,
+                name: username,
+                // @ts-expect-error
+                image: `https://cdn.discordapp.com/avatars/${session?.user?.id}/${session?.user?.avatar}`,
+              }}
+              token={token}
+            />
+          )}
+
           <UserNav />
           <ThemeToggle />
         </div>
