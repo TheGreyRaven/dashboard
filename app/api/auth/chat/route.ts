@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { StreamChat } from "stream-chat";
 
+import * as Sentry from "@sentry/nextjs";
+
 const CHAT_API_KEY = process.env.CHAT_API_KEY ?? "";
 const CHAT_API_SECRET = process.env.CHAT_API_SECRET ?? "";
 
@@ -32,6 +34,7 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
       }
     );
   } catch (err) {
+    Sentry.captureException(err);
     return Response.json(
       {
         message: "Invalid post",
