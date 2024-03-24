@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
+import { SoundNotification } from "./chat-notification";
 
 const sendMessage = async (data: any) => {
   await fetch(`/api/admins/chat`, {
@@ -29,6 +30,42 @@ const sendMessage = async (data: any) => {
       message: data.value,
       timestamp: new Date(),
     }),
+  });
+};
+
+const handleInput = async (key: any, session: any, mutate: any, chats: any) => {
+  const value = key.target.value;
+  const keyCode = key.keyCode;
+  if (keyCode !== 13 || value === "" || value.trim() === "") {
+    return;
+  }
+
+  const timestamp = new Date();
+
+  const message = {
+    chat_source: "WEB",
+    sender_name: session?.user?.name,
+    avatar_url: `https://cdn.discordapp.com/avatars/${session?.user?.id}/${session?.user.avatar}?size=1024`,
+    sender_id: session?.user?.id,
+    message: value,
+    timestamp: timestamp,
+  };
+
+  mutate([...chats, message], {
+    optimisticData: [...chats, message],
+    rollbackOnError: false,
+    populateCache: true,
+    revalidate: false,
+  });
+
+  key.target.value = "";
+
+  await sendMessage({
+    name: session?.user?.name,
+    id: session?.user?.id,
+    avatar: session?.user.avatar,
+    value: value,
+    timestamp: timestamp,
   });
 };
 
@@ -76,7 +113,6 @@ const ChatBox = () => {
   } = useSWR("/api/admins/chat", fetcher, {
     refreshInterval: 800,
   });
-
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -119,49 +155,14 @@ const ChatBox = () => {
           </div>
         </ScrollArea>
       </div>
-      <Input
-        className="mt-2"
-        placeholder="> Send message..."
-        onKeyUp={async (key) => {
-          const keyCode = key.code;
-          if (!keyCode.includes("Enter")) {
-            return;
-          }
-
-          //@ts-expect-error
-          const value = key.target.value;
-          const timestamp = new Date();
-
-          const message = {
-            chat_source: "WEB",
-            sender_name: session?.user?.name,
-            // @ts-expect-error
-            avatar_url: `https://cdn.discordapp.com/avatars/${session?.user?.id}/${session?.user.avatar}?size=1024`,
-            sender_id: session?.user?.id,
-            message: value,
-            timestamp: timestamp,
-          };
-
-          mutate([...chats, message], {
-            optimisticData: [...chats, message],
-            rollbackOnError: true,
-            populateCache: true,
-            revalidate: false,
-          });
-
-          //@ts-expect-error
-          key.target.value = "";
-
-          await sendMessage({
-            name: session?.user?.name,
-            id: session?.user?.id,
-            // @ts-expect-error
-            avatar: session?.user.avatar,
-            value: value,
-            timestamp: timestamp,
-          });
-        }}
-      />
+      <div className="flex justify-between mt-2">
+        <Input
+          placeholder="> Send message..."
+          onKeyUp={async (key) => handleInput(key, session, mutate, chats)}
+          className="mr-2"
+        />
+        <SoundNotification />
+      </div>
     </>
   );
 };
