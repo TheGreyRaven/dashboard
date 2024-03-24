@@ -3,18 +3,31 @@
 import "./layout.css";
 
 import { Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { ChannelFilters, User } from "stream-chat";
+import { ChannelFilters } from "stream-chat";
 import {
-    Channel, ChannelHeader, ChannelList, Chat, InfiniteScroll, MessageInput, MessageList, Thread,
-    Window
+  Channel,
+  ChannelHeader,
+  ChannelList,
+  Chat,
+  InfiniteScroll,
+  MessageInput,
+  MessageList,
+  Thread,
+  Window,
 } from "stream-chat-react";
 import { useDebouncedCallback } from "use-debounce";
 //@ts-expect-error
 import useSound from "use-sound";
 
 import {
-    Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useClient } from "@/lib/use-client";
 import { IconMessage } from "@tabler/icons-react";
@@ -26,22 +39,18 @@ const filters: ChannelFilters = {
   type: "messaging",
 };
 
-const ChatProvider = ({
-  apiKey,
-  user,
-  token,
-}: {
-  apiKey: string;
-  user: User;
-  token: string;
-}) => {
+const ChatProvider = ({ apiKey, token }: { apiKey: string; token: string }) => {
   const { toast } = useToast();
+  const { data } = useSession();
   const chatClient = useClient({
-    apiKey,
-    user,
+    apiKey: apiKey,
+    user: {
+      id: data?.user?.name!,
+      name: data?.user?.name!,
+    },
     tokenOrProvider: token,
   });
-  let [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [play] = useSound("/sounds/ding.mp3", {
     interrupt: true,
     volume: 0.2,
@@ -66,7 +75,7 @@ const ChatProvider = ({
   chatClient.on((event) => {
     if (
       event.type === "message.new" &&
-      event.message?.user?.id !== user.id &&
+      event.message?.user?.id !== data?.user?.name &&
       !open
     ) {
       debounced(event.channel_id!);

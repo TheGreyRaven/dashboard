@@ -3,10 +3,16 @@ import Image from "next/image";
 import { PlayerList } from "@/components/dashboard/charts/players-online/players";
 import { PlayersOnline } from "@/components/dashboard/stats/players-online";
 import { ServerEconomy } from "@/components/dashboard/stats/server-economy";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchDashboardData } from "@/lib/fetch";
-import { IconBrandDiscord, IconCash, IconUsers } from "@tabler/icons-react";
+import {
+  IconAlertTriangle,
+  IconBrandDiscord,
+  IconCash,
+  IconUsers,
+} from "@tabler/icons-react";
 
 import { auth } from "../api/auth/[...nextauth]/auth";
 
@@ -70,10 +76,24 @@ const Home = async () => {
   const session = await auth();
   const { online, money, members, health } = await getData();
   const { services, status, color } = setHealth(health);
+  //@ts-expect-error
+  const hasChat = session?.user?.chat?.token;
 
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        {!hasChat && (
+          <div>
+            <Alert className="border-red-600">
+              <IconAlertTriangle color="#721718" className="h-4 w-4" />
+              <AlertTitle>Warning!</AlertTitle>
+              <AlertDescription>
+                You are missing important session data for the chat function,
+                please log out and back in!
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
         <div className="flex items-baseline">
           <h2 className="text-3xl font-bold tracking-tight">Welcome back!</h2>
           <Image
@@ -132,7 +152,7 @@ const Home = async () => {
                 {members?.data?.today?.members ?? 0}
               </div>
               <p className="text-xs text-muted-foreground">
-                {members.data.difference} from yesterday
+                {members?.data?.difference} from yesterday
               </p>
             </CardContent>
           </Card>
