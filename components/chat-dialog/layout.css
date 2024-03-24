@@ -1,0 +1,53 @@
+@import '~stream-chat-react/dist/css/v2/index.css';
+
+.str-chat {
+  --str-chat__avatar-background-color: transparent
+}
+
+.str-chat__channel-header {
+  border-top-right-radius: 10px;
+}
+
+.str-chat__message-input {
+  border-bottom-right-radius: 10px;
+}
+
+.str-chat__channel-list {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  width: 30%;
+}
+
+@media only screen and (max-device-width: 640px) {
+  .str-chat__channel-list {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    max-width: 15%;
+  }
+}
+
+.str-chat__channel {
+  width: 100%;
+}
+.str-chat__thread {
+  width: 45%;
+}
+
+.str-chat__container {
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #27272a;
+  border-radius: 2px;
+  background-clip: content-box;
+}
