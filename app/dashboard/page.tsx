@@ -1,10 +1,12 @@
 import Image from "next/image";
 
+import { ChatBox } from "@/components/chat/chat-area";
 import { PlayerList } from "@/components/dashboard/charts/players-online/players";
 import { PlayersOnline } from "@/components/dashboard/stats/players-online";
 import { ServerEconomy } from "@/components/dashboard/stats/server-economy";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchDashboardData } from "@/lib/fetch";
 import { IconBrandDiscord, IconCash, IconUsers } from "@tabler/icons-react";
 
@@ -154,14 +156,32 @@ const Home = async () => {
           </Card>
         </div>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-4">
-            <CardHeader>
-              <CardTitle>Overview</CardTitle>
-            </CardHeader>
-            <CardContent className="pl-2">
-              <PlayerList />
-            </CardContent>
-          </Card>
+          <Tabs defaultValue="overview" className="col-span-4">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="overview">Graph</TabsTrigger>
+              <TabsTrigger value="chat">Chat</TabsTrigger>
+            </TabsList>
+            <TabsContent value="overview">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Overview</CardTitle>
+                </CardHeader>
+                <CardContent className="pl-2">
+                  <PlayerList />
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="chat">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Chat</CardTitle>
+                </CardHeader>
+                <CardContent className="">
+                  <ChatBox />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
           <PlayersOnline />
         </div>
       </div>

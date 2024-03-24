@@ -7,6 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model brp_web_admin_chat_logs {
+  id          Int                                 @id @default(autoincrement())
+  chat_source brp_web_admin_chat_logs_chat_source
+  sender_name String                              @db.VarChar(255)
+  sender_id   String                              @db.VarChar(255)
+  avatar_url  String                              @db.VarChar(255)
+  message     String                              @db.Text
+  timestamp   DateTime                            @default(now()) @db.Timestamp(0)
+}
+
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model brp_web_admins {
   id               Int                             @id @default(autoincrement())
@@ -19,12 +29,8 @@ model brp_web_admins {
   added_timestamp  DateTime                        @default(now()) @db.Timestamp(0)
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model brp_web_logs {
-  id Int @default(autoincrement())
-
-  @@index([id], map: "id")
-  @@ignore
+  id Int @id @default(autoincrement())
 }
 
 model brp_web_stats_discord_members {
@@ -37,9 +43,9 @@ model brp_web_stats_player_economy {
   id             Int      @id @default(autoincrement())
   license        String   @db.VarChar(255)
   citizen_id     String   @db.VarChar(50)
-  character_id   Int?
+  character_id   Int
   character_name String   @db.VarChar(255)
-  total_economy  Float?   @db.Float
+  total_economy  Float    @db.Float
   timestamp      DateTime @default(dbgenerated("(date_format(current_timestamp(),'%Y-%m-%d %H:%i:00'))")) @db.Timestamp(0)
 }
 
@@ -66,38 +72,121 @@ model brp_web_tebex_transactions {
   products       String   @db.LongText
 }
 
+model player_garages {
+  id        Int     @id @default(autoincrement())
+  owner     String? @db.VarChar(50)
+  name      String? @db.VarChar(50)
+  price     Int
+  coords    String? @db.Text
+  shell     String? @db.Text
+  type      String? @default("vehicle") @db.VarChar(50)
+  holders   String? @db.Text
+  available Int?
+  job       String? @db.VarChar(50)
+}
+
+model player_houses {
+  id            Int     @id @default(autoincrement())
+  house         String  @db.VarChar(50)
+  identifier    String? @db.VarChar(50)
+  citizenid     String? @db.VarChar(50)
+  insideId      String? @db.VarChar(50)
+  keyholders    String? @db.Text
+  decorations   String? @db.LongText
+  stash         String? @db.Text
+  houseID       String? @db.VarChar(50)
+  outfit        String? @db.Text
+  logout        String? @db.Text
+  decorateStash String? @db.Text
+  charge        String? @db.Text
+  credit        String? @db.VarChar(50)
+  creditPrice   String? @db.VarChar(50)
+  timer         Int?    @default(0)
+}
+
+model player_vehicles {
+  id              Int     @id @default(autoincrement())
+  license         String? @db.VarChar(50)
+  citizenid       String? @db.VarChar(50)
+  vehicle         String? @db.VarChar(50)
+  hash            String? @db.VarChar(50)
+  mods            String? @db.LongText
+  plate           String  @db.VarChar(50)
+  fakeplate       String? @db.VarChar(50)
+  garage          String? @default("Legion Square") @db.VarChar(50)
+  fuel            Int?    @default(100)
+  engine          Float?  @default(1000) @db.Float
+  body            Float?  @default(1000) @db.Float
+  state           Int?    @default(1)
+  depotprice      Int     @default(0)
+  drivingdistance Int?
+  status          String? @db.Text
+  balance         Int     @default(0)
+  paymentamount   Int     @default(0)
+  paymentsleft    Int     @default(0)
+  financetime     Int     @default(0)
+  impounded       Boolean @default(false)
+  carseller       Int?    @default(0)
+  vinnumber       String? @db.VarChar(50)
+  vinscratch      Int?    @default(0)
+  airSuspension   Int?    @default(0)
+  wheels          String? @db.VarChar(255)
+  lock            Int?    @default(4321)
+  damages         String? @db.LongText
+  job             String? @default("civ") @db.VarChar(50)
+  glovebox        String? @db.LongText
+  trunk           String? @db.LongText
+  tag             String? @db.VarChar(50)
+  impound_data    String? @default("") @db.Text
+  favorite        Int     @default(0)
+  type            String? @default("vehicle") @db.VarChar(50)
+  jobVehicle      String? @default("") @db.VarChar(50)
+  jobGarage       String? @default("") @db.VarChar(50)
+
+  @@index([citizenid], map: "citizenid")
+  @@index([license], map: "license")
+  @@index([plate], map: "plate")
+}
+
 model players {
-  id              Int      @default(autoincrement())
-  citizenid       String   @id @db.VarChar(50)
-  steamid         String?  @db.VarChar(55)
+  id              Int       @default(autoincrement())
+  citizenid       String    @id @db.VarChar(50)
+  steamid         String?   @db.VarChar(55)
   cid             Int?
-  license         String   @db.VarChar(255)
-  name            String   @db.VarChar(255)
-  money           String   @db.Text
-  charinfo        String?  @db.Text
-  job             String   @db.Text
-  gang            String?  @db.Text
-  position        String   @db.Text
-  metadata        String   @db.Text
-  inventory       String?  @db.LongText
-  last_updated    DateTime @default(now()) @db.Timestamp(0)
-  phone_number    String?  @db.VarChar(20)
-  iban            String?  @db.VarChar(255)
+  license         String    @db.VarChar(255)
+  name            String    @db.VarChar(255)
+  money           String    @db.Text
+  charinfo        String?   @db.Text
+  job             String    @db.Text
+  gang            String?   @db.Text
+  position        String    @db.Text
+  metadata        String    @db.Text
+  inventory       String?   @db.LongText
+  last_updated    DateTime  @default(now()) @db.Timestamp(0)
+  phone_number    String?   @db.VarChar(20)
+  iban            String?   @db.VarChar(255)
   pincode         Int?
-  crafting_level  Int      @default(0)
-  credits         Int      @default(0)
-  tasks           String   @default("") @db.VarChar(255)
-  tasks_completed String   @default("") @db.VarChar(255)
-  winnings        String   @default("") @db.VarChar(255)
-  wheel           String?  @default("0") @db.VarChar(1)
-  inside          String?  @db.VarChar(100)
-  shell_garage    String?  @default("") @db.Text
-  ownedskills     String   @default("{}") @db.LongText
-  skillsinfo      String   @default("{\"skillpoints\":0, \"skillxp\":0, \"nextlevel\":100, \"currentlevel\":0}") @db.LongText
+  crafting_level  Int       @default(0)
+  credits         Int       @default(0)
+  tasks           String    @default("") @db.VarChar(255)
+  tasks_completed String    @default("") @db.VarChar(255)
+  winnings        String    @default("") @db.VarChar(255)
+  wheel           String?   @default("0") @db.VarChar(1)
+  inside          String?   @db.VarChar(100)
+  shell_garage    String?   @default("") @db.Text
+  ownedskills     String    @default("{}") @db.LongText
+  skillsinfo      String    @default("{\"skillpoints\":0, \"skillxp\":0, \"nextlevel\":100, \"currentlevel\":0}") @db.LongText
+  created_at      DateTime? @default(now()) @db.Timestamp(0)
+  ignore_stats    Int?      @default(0) @db.TinyInt
 
   @@index([id], map: "id")
   @@index([last_updated], map: "last_updated")
   @@index([license], map: "license")
+}
+
+enum brp_web_admin_chat_logs_chat_source {
+  GAME
+  WEB
 }
 
 enum brp_web_admins_permission_level {

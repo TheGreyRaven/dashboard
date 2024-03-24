@@ -86,7 +86,7 @@ const PlayersOnline = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-80" type="always">
+        <ScrollArea className="h-[365px]" type="always">
           <div className="space-y-8 pr-4 pb-4">
             {data?.players?.map((player, key: number) => (
               <>
