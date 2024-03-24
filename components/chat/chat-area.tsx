@@ -130,6 +130,7 @@ const ChatBox = () => {
 
           //@ts-expect-error
           const value = key.target.value;
+          const timestamp = new Date();
 
           const message = {
             chat_source: "WEB",
@@ -138,14 +139,14 @@ const ChatBox = () => {
             avatar_url: `https://cdn.discordapp.com/avatars/${session?.user?.id}/${session?.user.avatar}?size=1024`,
             sender_id: session?.user?.id,
             message: value,
-            timestamp: new Date(),
+            timestamp: timestamp,
           };
 
           mutate([...chats, message], {
             optimisticData: [...chats, message],
-            rollbackOnError: false,
+            rollbackOnError: true,
             populateCache: true,
-            revalidate: true,
+            revalidate: false,
           });
 
           //@ts-expect-error
@@ -157,6 +158,7 @@ const ChatBox = () => {
             // @ts-expect-error
             avatar: session?.user.avatar,
             value: value,
+            timestamp: timestamp,
           });
         }}
       />
