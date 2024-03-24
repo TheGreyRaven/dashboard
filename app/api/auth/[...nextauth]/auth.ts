@@ -43,8 +43,26 @@ export const {
           );
           const { success, permission_level } = await exists.json();
 
+          const raw = await fetch(`${process.env.LOCAL_URL}/api/auth/chat/`, {
+            cache: "no-cache",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+              username: profile.username,
+            }),
+          });
+
+          const { key, token } = await raw.json();
+
           if (success && permission_level) {
             profile.permission_level = permission_level;
+            profile.chat = {
+              key: key,
+              token: token,
+            };
           }
 
           return success ? success : "/?error=not-admin";
@@ -74,6 +92,7 @@ export const {
           avatar: jwt.profile.avatar,
           email: jwt.profile.email,
           permission_level: jwt.profile.permission_level,
+          chat: jwt.profile.chat,
         };
       }
 
