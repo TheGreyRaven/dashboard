@@ -2,29 +2,38 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { ChatProvider } from "@/components/chat-dialog/chat-provider";
 import ThemeToggle from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
+import * as Sentry from "@sentry/nextjs";
 
 import { MobileSidebar } from "./mobile-sidebar";
 import { UserNav } from "./user-nav";
 
 const fetchAuthToken = async (username: string) => {
-  const raw = await fetch(`${process.env.LOCAL_URL}/api/auth/chat/`, {
-    cache: "no-cache",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify({
-      username: username,
-    }),
-  });
+  try {
+    const raw = await fetch(`${process.env.LOCAL_URL}/api/auth/chat/`, {
+      cache: "no-cache",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        username: username,
+      }),
+    });
 
-  const response = await raw.json();
+    const response = await raw.json();
 
-  return {
-    key: response.key,
-    token: response.token,
-  };
+    return {
+      key: response.key,
+      token: response.token,
+    };
+  } catch (err) {
+    Sentry.captureException(err);
+    return {
+      key: null,
+      token: null,
+    };
+  }
 };
 
 const Header = async () => {
