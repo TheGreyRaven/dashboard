@@ -7,9 +7,7 @@ import { IconCar, IconHome, IconUser, IconUsers } from "@tabler/icons-react";
 
 const getStats = async () => {
   const data = await fetch(`${process.env.LOCAL_URL}/api/graphs/players`, {
-    next: {
-      revalidate: 1000,
-    },
+    cache: "no-cache",
   });
   const result = await data.json();
   return result;
