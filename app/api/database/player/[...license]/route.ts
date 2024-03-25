@@ -60,6 +60,7 @@ const GET = async (
       shell_garage: character.shell_garage,
       ownedskills: JSON.parse(character.ownedskills),
       skillsinfo: JSON.parse(character.skillsinfo),
+      created_at: character?.created_at,
     };
 
     return Response.json(JSON.stringify(data, null, 4), {

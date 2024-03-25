@@ -16,7 +16,9 @@ const isPlayerOnline = (onlinePlayers: any, license: string) => {
 
 const GET = async (_req: NextRequest, _res: NextResponse) => {
   try {
-    const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`);
+    const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`, {
+      cache: "no-cache",
+    });
     const onlinePlayers = await raw.json();
 
     const players = await prisma.players.findMany({

@@ -4,9 +4,8 @@ import Discord from "next-auth/providers/discord";
 import * as Sentry from "@sentry/nextjs";
 
 const fetchChatToken = async (username: string) => {
-  console.log(username);
   try {
-    const raw = await fetch(`${process.env.LOCAL_URL}/api/auth/chat`, {
+    const raw = await fetch(`${process.env.LOCAL_URL}/api/chat/auth`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

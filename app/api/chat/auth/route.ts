@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { StreamChat } from "stream-chat";
 
+import { CHAT_API_KEY, serverClient } from "@/lib/streamchat";
 import * as Sentry from "@sentry/nextjs";
-
-const CHAT_API_KEY = process.env.CHAT_API_KEY ?? "";
-const CHAT_API_SECRET = process.env.CHAT_API_SECRET ?? "";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
   try {
@@ -20,7 +17,6 @@ const POST = async (_req: NextRequest, _res: NextResponse) => {
         }
       );
     }
-    const serverClient = StreamChat.getInstance(CHAT_API_KEY, CHAT_API_SECRET);
 
     const token = serverClient.createToken(username);
 
