@@ -6,7 +6,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { IconCar, IconHome, IconUser, IconUsers } from "@tabler/icons-react";
 
 const getStats = async () => {
-  const data = await fetch(`${process.env.LOCAL_URL}/api/graphs/players`);
+  const data = await fetch(`${process.env.LOCAL_URL}/api/graphs/players`, {
+    next: {
+      revalidate: 1000,
+    },
+  });
   const result = await data.json();
   return result;
 };
