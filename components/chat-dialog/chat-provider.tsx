@@ -35,13 +35,13 @@ import { IconMessage } from "@tabler/icons-react";
 import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
 
-const filters: ChannelFilters = {
-  type: "messaging",
-};
-
 const ChatProvider = ({ apiKey, token }: { apiKey: string; token: string }) => {
   const { toast } = useToast();
   const { data } = useSession();
+  const filters: ChannelFilters = {
+    members: { $in: [data?.user?.name!] },
+    type: "messaging",
+  };
   const chatClient = useClient({
     apiKey: apiKey,
     user: {
