@@ -7,6 +7,7 @@ const TEBEX_URL = `https://headless.tebex.io/api/accounts/${process.env.TEBEX_PU
 const GET = async (_req: NextRequest, _res: NextResponse) => {
   try {
     const tebexRaw = await fetch(TEBEX_URL, {
+      cache: "no-cache",
       headers: {
         Accept: "application/json",
       },
