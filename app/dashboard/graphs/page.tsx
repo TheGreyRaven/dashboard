@@ -6,7 +6,7 @@ const getServerEconomy = async () => {
   const raw = await fetch(
     `${process.env.LOCAL_URL}/api/graphs/server-economy`,
     {
-      cache: "no-cache",
+      cache: "no-store",
     }
   );
   const { success, error, data } = await raw.json();

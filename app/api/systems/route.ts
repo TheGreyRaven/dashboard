@@ -21,7 +21,7 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
 
   try {
     const fivem = await fetch(`${process.env.FIVEM_SERVER_URL}/info.json`, {
-      cache: "no-cache",
+      cache: "no-store",
     });
     if (fivem.ok) {
       HealthCheck.fivem = true;

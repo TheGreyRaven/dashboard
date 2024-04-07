@@ -7,15 +7,17 @@ const fetchDashboardData = async () => {
   try {
     const [online, money, members, system] = await Promise.all([
       fetch(`${process.env.LOCAL_URL}/api/fivem/players-online?live=true`, {
-        cache: "no-cache",
+        cache: "no-store",
       }),
       fetch(`${process.env.LOCAL_URL}/api/fivem/server-economy`, {
-        cache: "no-cache",
+        cache: "no-store",
       }),
       fetch(`${process.env.LOCAL_URL}/api/discord/members`, {
-        cache: "no-cache",
+        cache: "no-store",
       }),
-      fetch(`${process.env.LOCAL_URL}/api/systems`),
+      fetch(`${process.env.LOCAL_URL}/api/systems`, {
+        cache: "no-store",
+      }),
     ]);
 
     return {

@@ -4,7 +4,9 @@ import { prisma } from "@/lib/prisma";
 import * as Sentry from "@sentry/nextjs";
 
 const POST = async (_req: NextRequest, _res: NextResponse) => {
-  const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`);
+  const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`, {
+    cache: "no-store",
+  });
   const players = await raw.json();
   const currentlyOnline = players.length;
 
@@ -37,7 +39,9 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
 
   if (live) {
     const yesterday = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
-    const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`);
+    const raw = await fetch(`${process.env.FIVEM_SERVER_URL}/players.json`, {
+      cache: "no-store",
+    });
     const players = await raw.json();
 
     const max = await prisma.brp_web_stats_players_online.findFirst({

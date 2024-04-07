@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const getAdmins = async () => {
   const raw = await fetch(`${process.env.LOCAL_URL}/api/admins`, {
-    cache: "no-cache",
+    cache: "no-store",
   });
   const response = await raw.json();
 
@@ -14,7 +14,7 @@ const getAdmins = async () => {
 
 const getTxAdmins = async () => {
   const raw = await fetch(`${process.env.LOCAL_URL}/api/txadmin/admins`, {
-    cache: "no-cache",
+    cache: "no-store",
   });
   const response = await raw.json();
 
