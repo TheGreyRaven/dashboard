@@ -1,12 +1,7 @@
 import useSWRImmutable from "swr/immutable";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetcher } from "@/lib/utils";
 import { json } from "@codemirror/lang-json";
@@ -27,7 +22,10 @@ const ViewPlayer = ({
 }) => {
   const { data, isLoading, error } = useSWRImmutable(
     `/api/database/player/${license}/${cid}`,
-    fetcher
+    fetcher,
+    {
+      revalidateOnMount: true,
+    }
   );
 
   return (

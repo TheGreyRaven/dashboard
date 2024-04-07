@@ -8,38 +8,20 @@ import useSWRImmutable from "swr/immutable";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup,
+    DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
 import { fetcher } from "@/lib/utils";
 import * as Sentry from "@sentry/nextjs";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
+    ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel,
+    getPaginationRowModel, getSortedRowModel, SortingState, useReactTable, VisibilityState
 } from "@tanstack/react-table";
 
 import { ViewPlayer } from "./view-player";
@@ -73,7 +55,10 @@ const AlertBanner = () => {
 const PlayersTable = () => {
   const { data, isLoading, error } = useSWRImmutable(
     "/api/database/players",
-    fetcher
+    fetcher,
+    {
+      revalidateOnMount: true,
+    }
   );
 
   const [sorting, setSorting] = useState<SortingState>([]);
