@@ -109,6 +109,8 @@ const PlayerEconomyClient = ({ data }: { data: any }) => {
     ...data.map((item: any) => new Date(item.timestamp).getTime())
   );
 
+  console.log(characterData);
+
   return (
     <ScrollArea>
       <div className="flex-1 space-y-4 pt-6">

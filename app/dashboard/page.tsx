@@ -116,7 +116,7 @@ const Home = async () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {online.players.length}/90
+                {online.players.length}/64
               </div>
               <p className="text-xs text-muted-foreground">
                 Max last 24h:{" "}

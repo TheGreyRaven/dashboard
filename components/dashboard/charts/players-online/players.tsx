@@ -76,7 +76,7 @@ const PlayerList = () => {
           width={35}
           stroke="#888888"
           fontSize={12}
-          domain={[0, 90]}
+          domain={[0, 64]}
           tickLine={false}
           axisLine={false}
           tickFormatter={(value) => `${value}`}

@@ -82,7 +82,7 @@ const PlayersOnline = () => {
       <CardHeader>
         <CardTitle>Online Players</CardTitle>
         <CardDescription>
-          Currently: {data?.players.length ?? 0}/90
+          Currently: {data?.players.length ?? 0}/64
         </CardDescription>
       </CardHeader>
       <CardContent>
