@@ -95,3 +95,4 @@ const Players = async () => {
 };
 
 export default Players;
+export const dynamic = "force-dynamic";

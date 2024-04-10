@@ -46,3 +46,4 @@ const fetchDashboardData = async () => {
 };
 
 export { fetchDashboardData };
+export const dynamic = "force-dynamic";

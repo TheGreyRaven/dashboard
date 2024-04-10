@@ -69,3 +69,4 @@ const GET = async (_req: NextRequest, _res: NextResponse) => {
 };
 
 export { POST, GET };
+export const dynamic = "force-dynamic";

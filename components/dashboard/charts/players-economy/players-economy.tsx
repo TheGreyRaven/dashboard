@@ -145,6 +145,7 @@ const PlayerEconomyClient = ({ data }: { data: any }) => {
                   <CartesianGrid className="opacity-25" />
                   <XAxis
                     dataKey="timestamp"
+                    allowDuplicatedCategory={false}
                     type="number"
                     domain={[minX, maxX]}
                     tickFormatter={(unixTime) =>

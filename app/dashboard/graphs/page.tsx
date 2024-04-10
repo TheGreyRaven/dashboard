@@ -46,3 +46,4 @@ const GraphPage = async () => {
 };
 
 export default GraphPage;
+export const dynamic = "force-dynamic";

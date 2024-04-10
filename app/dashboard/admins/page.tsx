@@ -48,3 +48,4 @@ const Admins = async () => {
 };
 
 export default Admins;
+export const dynamic = "force-dynamic";

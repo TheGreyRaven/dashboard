@@ -22,3 +22,4 @@ const PlayersEconomy = async () => {
 };
 
 export { PlayersEconomy };
+export const dynamic = "force-dynamic";
